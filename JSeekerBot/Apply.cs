@@ -57,6 +57,7 @@ namespace JSeekerBot
                     }
                 }
 
+                //Increment page counter & open next job page
                 currentPageCounter++;
                 nextPageButton = Page.Locator($"[data-test-pagination-page-btn='{currentPageCounter}']");
                 await nextPageButton.ClickAsync();
@@ -128,6 +129,11 @@ namespace JSeekerBot
             }
         }
 
+        /// <summary>
+        /// Closes out of the Easy Apply Form. Used when unable to submit, or after app submission.
+        /// Used to keep flow when things don't work exactly as expected.
+        /// </summary>
+        /// <returns></returns>
         private async Task CloseJobDetails()
         {
 
