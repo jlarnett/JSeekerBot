@@ -1,0 +1,20 @@
+﻿{
+  "Scenario": "ObjectDetection",
+  "DataSource": {
+    "Type": "Vott",
+    "Version": 1
+  },
+  "Environment": {
+    "Type": "Azure",
+    "Version": 1,
+    "SubscriptionID": "00000000-0000-0000-0000-000000000000",
+    "ExperimentName": "doggocaptcha"
+  },
+  "Type": "TrainingConfig",
+  "Version": 4,
+  "TrainingOption": {
+    "Version": 1,
+    "Type": "DefaultTrainingOption",
+    "TrainingTime": 0
+  }
+}

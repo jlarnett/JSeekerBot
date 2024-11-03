@@ -15,6 +15,7 @@
 	<Playwright>
 		<BrowserName>chromium</BrowserName>
 		<ExpectTimeout>5000</ExpectTimeout>
+		
 		<LaunchOptions>
 			<Headless>false</Headless>
 			<!--<Channel>msedge</Channel>-->
