@@ -368,6 +368,4 @@ playwright/.auth
 *.env
 *.env.*
 
-/Results
-.Results/
-*.xlsx
+Results/

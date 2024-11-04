@@ -57,6 +57,15 @@ namespace JSeekerBot
             _responseInterpreter.AddQuestionResponse("Last name", "Arnett");
             _responseInterpreter.AddQuestionResponse("phone", "8123455974");
             _responseInterpreter.AddQuestionResponse("Phone", "8123455974");
+            _responseInterpreter.AddQuestionResponse("LinkedIn", "https://www.linkedin.com/in/johnny-arnett-350959135/");
+            _responseInterpreter.AddQuestionResponse("linkedin", "https://www.linkedin.com/in/johnny-arnett-350959135/");
+            _responseInterpreter.AddQuestionResponse("LINKEDIN", "https://www.linkedin.com/in/johnny-arnett-350959135/");
+            _responseInterpreter.AddQuestionResponse("Secret", "No");
+            _responseInterpreter.AddQuestionResponse("Secret Clearance", "No");
+            _responseInterpreter.AddQuestionResponse("Clearance", "No");
+            _responseInterpreter.AddQuestionResponse("clearance", "No");
+            _responseInterpreter.AddQuestionResponse("secret", "No");
+
         }
 
         [Test]
@@ -232,9 +241,12 @@ namespace JSeekerBot
 
                 string question = "";
 
-                if (await questionLabelElement.IsVisibleAsync())
-                    question = await questionLabelElement.InnerTextAsync();
-
+                if (questionLabelElement != null)
+                {
+                    if (await questionLabelElement.IsVisibleAsync())
+                        question = await questionLabelElement.InnerTextAsync();
+                } 
+                
                 var response = _responseInterpreter.GetQuestionResponse(question);
 
                 if (response != null)
@@ -255,13 +267,15 @@ namespace JSeekerBot
                 //Get the textboxes question
                 var inputId = await box.GetAttributeAsync("Id");
 
-
                 var questionLabelElement = Page.Locator($"[for='{inputId}']");
 
                 string question = "";
 
-                if (await questionLabelElement.IsVisibleAsync())
-                    question = await questionLabelElement.InnerTextAsync();
+                if (questionLabelElement != null)
+                {
+                    if (await questionLabelElement.IsVisibleAsync())
+                        question = await questionLabelElement.InnerTextAsync();
+                }
 
                 var response = _responseInterpreter.GetQuestionResponse(question);
 
@@ -293,7 +307,17 @@ namespace JSeekerBot
             foreach (var question in radioButtonQuestionContainer)
             {
                 //Get the textboxes question
-                var questionText = await (await question.QuerySelectorAsync("legend")).InnerTextAsync();
+
+                var questionLabelElement = await question.QuerySelectorAsync("legend");
+
+                string questionText = "";
+
+                if (questionLabelElement != null)
+                {
+                    if (await questionLabelElement.IsVisibleAsync())
+                        questionText = await questionLabelElement.InnerTextAsync();
+                }
+
                 var response = _responseInterpreter.GetQuestionResponse(questionText);
                 var options = await question.QuerySelectorAllAsync("label");
 
@@ -315,7 +339,6 @@ namespace JSeekerBot
             }
         }
 
-        /// <summary>
         /// <summary>
         /// Closes out of the Easy Apply Form. Used when unable to submit, or after app submission.
         /// Used to keep flow when things don't work exactly as expected.
@@ -356,7 +379,7 @@ namespace JSeekerBot
                 workSheet.Cell(i+2, 5).Value = _applicationStatusEntries[i].HadEasyApplyButton;
             }
 
-            wb.SaveAs($"ApplicationStatuses - {DateTime.UtcNow.Ticks}.xlsx");
+            wb.SaveAs($"..//..//..//Results//ApplicationStatuses - {DateTime.UtcNow.Ticks}.xlsx");
         }
 
 
