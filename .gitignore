@@ -367,3 +367,7 @@ playwright/.auth
 ### ENV Files ###
 *.env
 *.env.*
+
+/Results
+.Results/
+*.xlsx
