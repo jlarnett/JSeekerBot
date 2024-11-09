@@ -12,14 +12,15 @@ namespace JSeekerBot
 
         public void AddQuestionResponse(string questionKeyword, string correctResponse)
         {
-            questionResponseDictionary.Add(questionKeyword, correctResponse);
+            questionResponseDictionary.Add(questionKeyword.ToUpper(), correctResponse.ToUpper());
         }
 
         public string? GetQuestionResponse(string question)
         {
+            var upper = question.ToUpper();
             foreach (var questionResponsePair in questionResponseDictionary)
             {
-                if (question.Contains(questionResponsePair.Key))
+                if (upper.Contains(questionResponsePair.Key))
                 {
                     return questionResponsePair.Value;
                 }
