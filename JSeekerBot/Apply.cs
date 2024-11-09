@@ -57,6 +57,8 @@ namespace JSeekerBot
             _responseInterpreter.AddQuestionResponse("Last name", "Arnett");
             _responseInterpreter.AddQuestionResponse("phone", "8123455974");
             _responseInterpreter.AddQuestionResponse("Phone", "8123455974");
+            _responseInterpreter.AddQuestionResponse("Google form to be considered", "Yes");
+            _responseInterpreter.AddQuestionResponse("Google form to be ", "Yes");
             _responseInterpreter.AddQuestionResponse("LinkedIn", "https://www.linkedin.com/in/johnny-arnett-350959135/");
             _responseInterpreter.AddQuestionResponse("linkedin", "https://www.linkedin.com/in/johnny-arnett-350959135/");
             _responseInterpreter.AddQuestionResponse("LINKEDIN", "https://www.linkedin.com/in/johnny-arnett-350959135/");
@@ -65,7 +67,9 @@ namespace JSeekerBot
             _responseInterpreter.AddQuestionResponse("Clearance", "No");
             _responseInterpreter.AddQuestionResponse("clearance", "No");
             _responseInterpreter.AddQuestionResponse("secret", "No");
-
+            _responseInterpreter.AddQuestionResponse("cover letter", "Dear Hiring Manager,\n\nWith extensive experience in quality assurance and a proven track record in ensuring software reliability and functionality, I am excited to apply for the Sr. Quality Assurance Analyst role. My expertise in test strategy, automation, and troubleshooting aligns well with your company’s commitment to quality. I am eager to bring my analytical skills and attention to detail to your team.\n\nThank you for considering my application.\n\nSincerely,\nJohnny Arnett");
+            _responseInterpreter.AddQuestionResponse("Cover letter", "Dear Hiring Manager,\n\nWith extensive experience in quality assurance and a proven track record in ensuring software reliability and functionality, I am excited to apply for the Sr. Quality Assurance Analyst role. My expertise in test strategy, automation, and troubleshooting aligns well with your company’s commitment to quality. I am eager to bring my analytical skills and attention to detail to your team.\n\nThank you for considering my application.\n\nSincerely,\nJohnny Arnett");
+            _responseInterpreter.AddQuestionResponse("Cover Letter", "Dear Hiring Manager,\n\nWith extensive experience in quality assurance and a proven track record in ensuring software reliability and functionality, I am excited to apply for the Sr. Quality Assurance Analyst role. My expertise in test strategy, automation, and troubleshooting aligns well with your company’s commitment to quality. I am eager to bring my analytical skills and attention to detail to your team.\n\nThank you for considering my application.\n\nSincerely,\nJohnny Arnett");
         }
 
         [Test]
@@ -85,22 +89,24 @@ namespace JSeekerBot
             await Page.GetByLabel("Password").FillAsync(pass);
             await Page.GetByRole(AriaRole.Button, new () { NameString = "Sign in" }).ClickAsync();
 
-            await Page.WaitForTimeoutAsync(30000);
-
-            await Page.ClickAsync("body", new PageClickOptions()
+            if (!await Page.GetByRole(AriaRole.Link, new() { NameString = "Jobs" }).IsVisibleAsync())
             {
-                Position = new Position()
+                await Page.WaitForTimeoutAsync(30000);
+
+                await Page.ClickAsync("body", new PageClickOptions()
                 {
-                    X = 625,
-                    Y = 480
-                }
-            });
+                    Position = new Position()
+                    {
+                        X = 625,
+                        Y = 480
+                    }
+                });
 
-            await Page.ScreenshotAsync(new()
-            {
-                Path = "verification.png",
-            });
-
+                await Page.ScreenshotAsync(new()
+                {
+                    Path = "verification.png",
+                });
+            }
 
             await Page.WaitForURLAsync("https://www.linkedin.com/feed/");
 
@@ -287,7 +293,11 @@ namespace JSeekerBot
 
                         if (!isInt)
                         {
-                            await box.SelectOptionAsync(response);
+                            foreach (var option in options)
+                            {
+                                if (await option.TextContentAsync() == response)
+                                    await box.SelectOptionAsync(response);
+                            }
                         }
                         else
                         {
@@ -361,8 +371,20 @@ namespace JSeekerBot
         [OneTimeTearDown]
         public void GenerateExcelDocument()
         {
-            var wb = new XLWorkbook();
-            var workSheet = wb.AddWorksheet($"Job_Application_Record");
+
+            bool resultFileExists = File.Exists("..//..//..//Results//Applications.xlsx");
+            XLWorkbook wb;
+
+            if (resultFileExists)
+            {
+                wb = new XLWorkbook("..//..//..//Results//Applications.xlsx");
+            }
+            else
+            {
+                wb = new XLWorkbook();
+            }
+
+            var workSheet = wb.AddWorksheet($"Run-{DateTime.UtcNow.Ticks}");
 
             workSheet.Cell(1, 1).Value = "Company";
             workSheet.Cell(1, 2).Value = "Job Title";
@@ -379,7 +401,7 @@ namespace JSeekerBot
                 workSheet.Cell(i+2, 5).Value = _applicationStatusEntries[i].HadEasyApplyButton;
             }
 
-            wb.SaveAs($"..//..//..//Results//ApplicationStatuses - {DateTime.UtcNow.Ticks}.xlsx");
+            wb.SaveAs($"..//..//..//Results//Applications.xlsx");
         }
 
 
