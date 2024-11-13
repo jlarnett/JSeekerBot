@@ -12,17 +12,25 @@ namespace JSeekerBot
 
         public void AddQuestionResponse(string questionKeyword, string correctResponse)
         {
-            questionResponseDictionary.Add(questionKeyword.ToUpper(), correctResponse.ToUpper());
+            questionResponseDictionary.Add(questionKeyword.ToUpper(), correctResponse);
         }
 
-        public string? GetQuestionResponse(string question)
+        public string? GetQuestionResponse(string question, String jobTitle = "")
         {
             var upper = question.ToUpper();
             foreach (var questionResponsePair in questionResponseDictionary)
             {
                 if (upper.Contains(questionResponsePair.Key))
                 {
-                    return questionResponsePair.Value;
+                    if (questionResponsePair.Key == "COVER LETTER")
+                    {
+                        return questionResponsePair.Value.Replace("{jobtitlerole}", jobTitle);
+                    }
+                    else
+                    {
+                        return questionResponsePair.Value;
+                    }
+                    
                 }
             }
 
