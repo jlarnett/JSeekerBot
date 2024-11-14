@@ -72,40 +72,14 @@ namespace JSeekerBot
         [Test]
         public async Task ApplyNow()
         {
+            //Navigate to LinkedIn site
             await Page.GotoAsync("https://linkedin.com/");
 
-            await Page.Locator("[data-test-id=\"home-hero-sign-in-cta\"]").ClickAsync();
-            await Page.WaitForURLAsync("https://www.linkedin.com/login");
-
-            //Login
-            var email = TestConfig.GetVarFor<string>("LINKEDIN_USERNAME");
-            var pass = TestConfig.GetVarFor<string>("LINKEDIN_PASSWORD");
+            //Login to LinkedIn profile
+            await Page.LoginLinkedInAsync();
 
 
-            await Page.GetByLabel("Email or phone").FillAsync(email);
-            await Page.GetByLabel("Password").FillAsync(pass);
-            await Page.GetByRole(AriaRole.Button, new () { NameString = "Sign in" }).ClickAsync();
-
-            if (!(await Page.GetByRole(AriaRole.Link, new() { NameString = "Jobs" }).IsVisibleAsync()))
-            {
-                await Page.WaitForTimeoutAsync(30000);
-
-                await Page.ClickAsync("body", new PageClickOptions()
-                {
-                    Position = new Position()
-                    {
-                        X = 625,
-                        Y = 480
-                    }
-                });
-
-                await Page.ScreenshotAsync(new()
-                {
-                    Path = "verification.png",
-                });
-            }
-
-            await Page.WaitForURLAsync("https://www.linkedin.com/feed/");
+            //await Page.WaitForURLAsync("https://www.linkedin.com/feed/");
 
 
             //Navigate to the Find Jobs page. 
@@ -121,17 +95,26 @@ namespace JSeekerBot
             //Check each job in the job list. Look for easy apply button
             do
             {
-                await Page.WaitForTimeoutAsync(5000);
+                await Page.WaitForTimeoutAsync(1500);
+
+                //Verify that the last job application form has closed, before starting another
                 await CloseJobDetails();
+
+                //List of job postings for the current page. Contains list of jobPosts
                 var jobList = await Page.QuerySelectorAllAsync(".scaffold-layout__list-container .jobs-search-results__list-item");
 
                 foreach (var jobPost in jobList)
                 {
                     await jobPost.ClickAsync();
+
+                    //Easy Apply Button locator. 
                     var easyApplyButton = Page.Locator(".jobs-apply-button--top-card").First;
+
+                    //variable to check if our bot reached max apply limmit
                     reachedEasyApplyLimit = await Page
                         .GetByText("You’ve reached the Easy Apply application limit for today").IsVisibleAsync();
 
+                    //Breaks bot from going through rest of job posting page results. Breaks loop and signifies end of test. 
                     if (reachedEasyApplyLimit)
                     {
                         break;
@@ -141,48 +124,27 @@ namespace JSeekerBot
                     {
                         if (await easyApplyButton.InnerTextAsync() == "Easy Apply")
                         {
+                            //Button CONFIRMED to be Easy Apply -> Try to submit profiles application
                             await easyApplyButton.ClickAsync();
                             await TryToSubmitApplication();
-                            await Page.WaitForTimeoutAsync(1500);
+
+                            // Page.WaitForTimeoutAsync(1500);
                         }
                         else
                         {
-                            string? companyTitle = "";
-
-                            if (await Page.Locator("#jobs-apply-header").IsVisibleAsync())
-                            {
-                                companyTitle = await Page.Locator("#jobs-apply-header").TextContentAsync();
-                            }
-
-                            //var compensation = await Page.GetByText(new Regex("K\\/yr")).InnerTextAsync();
-
-                            var jobTitle = await Page.Locator(".job-details-jobs-unified-top-card__job-title").TextContentAsync();
-
-                            var salary = await Page.Locator(".job-details-preferences-and-skills__pill").First.InnerTextAsync();
-
-                            if (!salary.Contains("K/yr"))
-                            {
-                                salary = "";
-                            }
-
-                            if (companyTitle != null)
-                            {
-                                string replaceWith = "";
-                                var cleanCompanyTitle = companyTitle.Replace("Apply to", "").Replace("\n", replaceWith);
-                                var cleanJobTitle = jobTitle.Replace("\n", replaceWith);
-                                _applicationStatusEntries.Add(new JobApplicationStatusEntry(cleanCompanyTitle, false, DateTime.UtcNow, cleanJobTitle, false, salary));
-                            }
+                            //Record the job posting into excel document.
+                            _applicationStatusEntries.Add(await Page.GetApplicationStatusEntryDetailsAsync(false, false));
                         }
                     }
                 }
 
-                //Increment page counter & open next job page
+                //Increment page counter & click page counter to move bot to next page of results
                 currentPageCounter++;
                 nextPageButton = Page.Locator($"[data-test-pagination-page-btn='{currentPageCounter}']");
                 await nextPageButton.ClickAsync();
 
 
-
+            //If we run out of pages or reach the easy apply limit counter, we continue applying. Otherwise shut down the bot successfully
             } while ((await nextPageButton.IsVisibleAsync() || await nextPageButton.IsEnabledAsync()) && !reachedEasyApplyLimit);
         }
 
@@ -196,20 +158,14 @@ namespace JSeekerBot
         private async Task TryToSubmitApplication()
         {
             int tryCounter = 0;
-            string? companyTitle = "";
-
-            if (await Page.Locator("#jobs-apply-header").IsVisibleAsync())
-            {
-                companyTitle = await Page.Locator("#jobs-apply-header").TextContentAsync();
-            }
-
-            var jobTitle = await Page.Locator(".job-details-jobs-unified-top-card__job-title").TextContentAsync();
             bool successfullyApplied = false;
+
+            var applicationStatusEntry = await Page.GetApplicationStatusEntryDetailsAsync(false, true);
 
             while (await Page.Locator($"[aria-label='Continue to next step']").IsVisibleAsync() && tryCounter < 15)
             {
-
-                await TryFillEmptyInputs(jobTitle);
+                //Try to fill the current application forms page. Try 15 times before giving up. TODO - This could probably be lowered was a failsafe
+                await TryFillEmptyInputs(applicationStatusEntry.JobTitle);
 
                 if (await Page.Locator($"[aria-label='Continue to next step']").IsVisibleAsync() && await Page.Locator($"[aria-label='Continue to next step']").CountAsync() > 0 && await Page.Locator($"[aria-label='Continue to next step']").IsEnabledAsync())
                     await Page.Locator($"[aria-label='Continue to next step']").ClickAsync();
@@ -217,9 +173,11 @@ namespace JSeekerBot
                 tryCounter++;
             }
 
+
             if (tryCounter < 15)
             {
-                await TryFillEmptyInputs(jobTitle);
+                //If we were able to get past every application page try to submit the job application
+                await TryFillEmptyInputs(applicationStatusEntry.JobTitle);
                 if (await Page.GetByRole(AriaRole.Button, new() { NameString = "Review your application" }).IsVisibleAsync())
                     await Page.GetByRole(AriaRole.Button, new () { NameString = "Review your application" }).ClickAsync();
 
@@ -231,20 +189,9 @@ namespace JSeekerBot
 
             }
 
-            var salary = await Page.Locator(".job-details-preferences-and-skills__pill").First.InnerTextAsync();
-
-            if (!salary.Contains("K/yr"))
-            {
-                salary = "";
-            }
-
-            if (companyTitle != null)
-            {
-                string replaceWith = "";
-                var cleanCompanyTitle = companyTitle.Replace("Apply to", "").Replace("\n", replaceWith);
-                var cleanJobTitle = jobTitle.Replace("\n", replaceWith);
-                _applicationStatusEntries.Add(new JobApplicationStatusEntry(cleanCompanyTitle, successfullyApplied, DateTime.UtcNow, cleanJobTitle, true, salary));
-            }
+            //Track the application submission success in the excel document
+            applicationStatusEntry.ApplicationStatus = successfullyApplied;
+            _applicationStatusEntries.Add(applicationStatusEntry);
 
             await CloseJobDetails();
         }
