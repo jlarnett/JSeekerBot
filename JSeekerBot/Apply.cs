@@ -16,57 +16,15 @@ namespace JSeekerBot
     {
         private List<JobApplicationStatusEntry> _applicationStatusEntries = new List<JobApplicationStatusEntry>();
         private ResponseInterpreter _responseInterpreter;
+        private SettingsLoader.SettingsConfig _settingsConfig;
 
         [OneTimeSetUp]
         public void Setup()
         {
             _responseInterpreter = new ResponseInterpreter();
-            _responseInterpreter.AddQuestionResponse("C#", "10");
-            _responseInterpreter.AddQuestionResponse("bachelor", "No");
-            _responseInterpreter.AddQuestionResponse("Bachelor's", "No");
-            _responseInterpreter.AddQuestionResponse("background check", "Yes");
-            _responseInterpreter.AddQuestionResponse("phone number", "8123455974");
-            _responseInterpreter.AddQuestionResponse("Email", "im10g@hotmail.com");
-            _responseInterpreter.AddQuestionResponse("visa", "No");
-            _responseInterpreter.AddQuestionResponse("legally authorized to work", "yes");
-            _responseInterpreter.AddQuestionResponse("automation", "5");
-            _responseInterpreter.AddQuestionResponse("JavaScript", "5");
-            _responseInterpreter.AddQuestionResponse("XML", "5");
-            _responseInterpreter.AddQuestionResponse("onsite", "Yes");
-            _responseInterpreter.AddQuestionResponse("SQL", "8");
-            _responseInterpreter.AddQuestionResponse("Oracle", "2");
-            _responseInterpreter.AddQuestionResponse("Powershell", "3");
-            _responseInterpreter.AddQuestionResponse("Jira", "4");
-            _responseInterpreter.AddQuestionResponse("hybrid", "4");
-            _responseInterpreter.AddQuestionResponse("Software as a Service", "3");
-            _responseInterpreter.AddQuestionResponse("SaaS", "3");
-            _responseInterpreter.AddQuestionResponse("Java", "3");
-            _responseInterpreter.AddQuestionResponse("Full-Stack", "6");
-            _responseInterpreter.AddQuestionResponse("Web Application", "10");
-            _responseInterpreter.AddQuestionResponse("commuting", "Yes");
-            _responseInterpreter.AddQuestionResponse("AWS", "5");
-            _responseInterpreter.AddQuestionResponse("Amazon Web Services", "5");
-            _responseInterpreter.AddQuestionResponse("JQUERY", "10");
-            _responseInterpreter.AddQuestionResponse("HTML", "10");
-            _responseInterpreter.AddQuestionResponse(".NET", "10");
-            _responseInterpreter.AddQuestionResponse("react", "2");
-            _responseInterpreter.AddQuestionResponse("first name", "Johnny");
-            _responseInterpreter.AddQuestionResponse("last name", "Arnett");
-            _responseInterpreter.AddQuestionResponse("phone", "8123455974");
-            _responseInterpreter.AddQuestionResponse("Google form to be considered", "Yes");
-            _responseInterpreter.AddQuestionResponse("Google form to be ", "Yes");
-            _responseInterpreter.AddQuestionResponse("LINKEDIN", "https://www.linkedin.com/in/johnny-arnett-350959135/");
-            _responseInterpreter.AddQuestionResponse("Secret Clearance", "No");
-            _responseInterpreter.AddQuestionResponse("Clearance", "No");
-            _responseInterpreter.AddQuestionResponse("secret", "No");
-            _responseInterpreter.AddQuestionResponse("Cover Letter", "Dear Hiring Manager,\n\nWith extensive experience in quality assurance and a proven track record in ensuring software reliability and functionality, I am excited to apply for the {jobtitlerole} role. My expertise in test strategy, automation, and troubleshooting aligns well with your company’s commitment to quality. I am eager to bring my analytical skills and attention to detail to your team.\n\nThank you for considering my application.\n\nSincerely,\nJohnny Arnett");
-            _responseInterpreter.AddQuestionResponse("drug", "Yes");
-            _responseInterpreter.AddQuestionResponse("remote setting", "Yes");
-            _responseInterpreter.AddQuestionResponse("desired pay", "85000 USD");
-            _responseInterpreter.AddQuestionResponse("desired salary", "85000 USD");
-            _responseInterpreter.AddQuestionResponse("address", "1000 Western Hills Drive");
-            _responseInterpreter.AddQuestionResponse("city", "Evansville");
-            _responseInterpreter.AddQuestionResponse("state", "Indiana");
+            _settingsConfig = SettingsLoader.LoadFile();
+            var questionResponsePairs = SettingsLoader.LoadQuestionResponseFile();
+            _responseInterpreter.AddQuestionResponse(questionResponsePairs);
         }
 
         [Test]
@@ -92,6 +50,9 @@ namespace JSeekerBot
             ILocator nextPageButton;
             var reachedEasyApplyLimit = false;
 
+            int jobsProcessed = 0;
+            int applicationsSubmitted = 0;
+
             //Check each job in the job list. Look for easy apply button
             do
             {
@@ -112,7 +73,7 @@ namespace JSeekerBot
 
                     //variable to check if our bot reached max apply limmit
                     reachedEasyApplyLimit = await Page
-                        .GetByText("You’ve reached the Easy Apply application limit for today").IsVisibleAsync();
+                        .GetByText("Easy Apply application limit").IsVisibleAsync();
 
                     //Breaks bot from going through rest of job posting page results. Breaks loop and signifies end of test. 
                     if (reachedEasyApplyLimit)
@@ -126,8 +87,12 @@ namespace JSeekerBot
                         {
                             //Button CONFIRMED to be Easy Apply -> Try to submit profiles application
                             await easyApplyButton.ClickAsync();
-                            await TryToSubmitApplication();
+                            bool successfulApplication = await TryToSubmitApplication();
 
+                            if (successfulApplication)
+                                applicationsSubmitted++;
+
+                            Console.WriteLine($"Applications Submitted - {applicationsSubmitted}");
                             // Page.WaitForTimeoutAsync(1500);
                         }
                         else
@@ -136,6 +101,9 @@ namespace JSeekerBot
                             _applicationStatusEntries.Add(await Page.GetApplicationStatusEntryDetailsAsync(false, false));
                         }
                     }
+
+                    jobsProcessed++;
+                    Console.WriteLine($"Jobs Processed - {jobsProcessed}");
                 }
 
                 //Increment page counter & click page counter to move bot to next page of results
@@ -155,7 +123,7 @@ namespace JSeekerBot
         /// Once the Review Application button is present clicks it, then submits the application.
         /// </summary>
         /// <returns></returns>
-        private async Task TryToSubmitApplication()
+        private async Task<bool> TryToSubmitApplication()
         {
             int tryCounter = 0;
             bool successfullyApplied = false;
@@ -194,6 +162,8 @@ namespace JSeekerBot
             _applicationStatusEntries.Add(applicationStatusEntry);
 
             await CloseJobDetails();
+
+            return successfullyApplied;
         }
 
         /// <summary>
@@ -227,7 +197,7 @@ namespace JSeekerBot
                 }
                 else
                 {
-                    await input.FillAsync("5");
+                    await input.FillAsync(_settingsConfig.DefaultTextboxResponse);
                 }
             }
 
@@ -274,7 +244,8 @@ namespace JSeekerBot
                     }
                     else
                     {
-                        await box.SelectOptionAsync(await options[1].GetAttributeAsync("value") );
+                        int.TryParse(_settingsConfig.DefaultComboBoxResponse, out int result);
+                        await box.SelectOptionAsync(await options[result].GetAttributeAsync("value") );
                     }
                 }
             }
@@ -311,7 +282,24 @@ namespace JSeekerBot
                 }
                 else
                 {
-                    await options.FirstOrDefault().ClickAsync();
+                    if (_settingsConfig.DefaultRadioButtonResponse.ToUpper() == "YES")
+                    {
+                        await options.FirstOrDefault().ClickAsync();
+                    }
+                    else if (_settingsConfig.DefaultRadioButtonResponse.ToUpper() == "NO")
+                    {
+                        await options[1].ClickAsync();
+                    }
+                    else
+                    {
+                        foreach (var option in options)
+                        {
+                            if ((await option.TextContentAsync()).Contains(_settingsConfig.DefaultRadioButtonResponse))
+                            {
+                                await option.ClickAsync();
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -339,12 +327,13 @@ namespace JSeekerBot
         public void GenerateExcelDocument()
         {
 
-            bool resultFileExists = File.Exists("..//..//..//Results//Applications.xlsx");
+
+            bool resultFileExists = File.Exists($"{_settingsConfig.ResultFolderPath}//Applications.xlsx");
             XLWorkbook wb;
 
             if (resultFileExists)
             {
-                wb = new XLWorkbook("..//..//..//Results//Applications.xlsx");
+                wb = new XLWorkbook($"{_settingsConfig.ResultFolderPath}//Applications.xlsx");
             }
             else
             {
@@ -370,7 +359,7 @@ namespace JSeekerBot
                 workSheet.Cell(i+2, 6).Value = _applicationStatusEntries[i].Salary;
             }
 
-            wb.SaveAs($"..//..//..//Results//Applications.xlsx");
+            wb.SaveAs($"{_settingsConfig.ResultFolderPath}//Applications.xlsx");
         }
 
 

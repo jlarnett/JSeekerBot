@@ -1,0 +1,1 @@
+cd ..\..\..\..\JSeekerBot ; dotnet test --settings:chrome.runsettings

@@ -10,6 +10,14 @@ namespace JSeekerBot
     {
         private Dictionary<string, string> questionResponseDictionary = new Dictionary<string, string>();
 
+        public void AddQuestionResponse(List<QuestionResponsePair> pairs)
+        {
+            foreach (var pair in pairs)
+            {
+                questionResponseDictionary.Add(pair.QuestionKey.ToUpper(), pair.CorrectResponse);
+            }
+        }
+
         public void AddQuestionResponse(string questionKeyword, string correctResponse)
         {
             questionResponseDictionary.Add(questionKeyword.ToUpper(), correctResponse);
@@ -36,5 +44,11 @@ namespace JSeekerBot
 
             return null;
         }
+    }
+
+    public struct QuestionResponsePair
+    {
+        public string QuestionKey { get; set; }
+        public string CorrectResponse { get; set; }
     }
 }
