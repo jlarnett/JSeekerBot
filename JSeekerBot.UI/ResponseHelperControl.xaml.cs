@@ -42,7 +42,7 @@ namespace JSeekerBot.UI
             }
 
             if(!keyExists)
-                QuestionResponsePairsList.Items.Add($"{QuestionKeyTextbox.Text} | {QuestionResponseTextbox.Text}");
+                QuestionResponsePairsList.Items.Add($"{QuestionKeyTextbox.Text}|{QuestionResponseTextbox.Text}");
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
