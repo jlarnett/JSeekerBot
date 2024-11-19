@@ -112,7 +112,7 @@ namespace JSeekerBot
                 await nextPageButton.ClickAsync();
 
 
-            //If we run out of pages or reach the easy apply limit counter, we continue applying. Otherwise shut down the bot successfully
+            //If we run out of pages or reach the easy apply limit counter, we continue applying. Otherwise, shut down the bot successfully
             } while ((await nextPageButton.IsVisibleAsync() || await nextPageButton.IsEnabledAsync()) && !reachedEasyApplyLimit);
         }
 
@@ -173,39 +173,19 @@ namespace JSeekerBot
         /// <returns></returns>
         private async Task TryFillEmptyInputs(string jobTitle)
         {
-            var inputs = await Page.QuerySelectorAllAsync(".artdeco-text-input--input");
+            await PopulateFormTextboxes(jobTitle);
+            await PopulateFormDropdowns();
+            await PopulateFormRadioButtons();
+        }
 
-            foreach (var input in inputs)
-            {
-                //Get the textboxes question
-                var inputId = await input.GetAttributeAsync("Id");
-                var questionLabelElement = Page.Locator($"[for='{inputId}']");
-
-                string question = "";
-
-                if (questionLabelElement != null)
-                {
-                    if (await questionLabelElement.IsVisibleAsync())
-                        question = await questionLabelElement.InnerTextAsync();
-                } 
-                
-                var response = _responseInterpreter.GetQuestionResponse(question, jobTitle);
-
-                if (response != null)
-                {
-                    await input.FillAsync(response);
-                }
-                else
-                {
-                    await input.FillAsync(_settingsConfig.DefaultTextboxResponse);
-                }
-            }
-
+        private async Task PopulateFormDropdowns()
+        {
             var comboBoxes = await Page.QuerySelectorAllAsync("select");
 
             foreach (var box in comboBoxes)
             {
                 var options = await box.QuerySelectorAllAsync("option");
+
                 //Get the textboxes question
                 var inputId = await box.GetAttributeAsync("Id");
 
@@ -231,8 +211,11 @@ namespace JSeekerBot
                         {
                             foreach (var option in options)
                             {
-                                if ((await option.TextContentAsync()).Contains(response))
-                                    await box.SelectOptionAsync(response);
+                                var optionValue = await option.GetAttributeAsync("value");
+                                bool optionContainsText = optionValue.Contains(response);
+
+                                if (optionContainsText)
+                                    await box.SelectOptionAsync(optionValue);
                             }
                         }
                         else
@@ -249,7 +232,10 @@ namespace JSeekerBot
                     }
                 }
             }
+        }
 
+        private async Task PopulateFormRadioButtons()
+        {
             var radioButtonQuestionContainer = await Page.QuerySelectorAllAsync("fieldset");
 
             foreach (var question in radioButtonQuestionContainer)
@@ -300,6 +286,37 @@ namespace JSeekerBot
                             }
                         }
                     }
+                }
+            }
+        }
+
+        private async Task PopulateFormTextboxes(string jobTitle)
+        {
+            var inputs = await Page.QuerySelectorAllAsync(".artdeco-text-input--input");
+
+            foreach (var input in inputs)
+            {
+                //Get the textboxes question
+                var inputId = await input.GetAttributeAsync("Id");
+                var questionLabelElement = Page.Locator($"[for='{inputId}']");
+
+                string question = "";
+
+                if (questionLabelElement != null)
+                {
+                    if (await questionLabelElement.IsVisibleAsync())
+                        question = await questionLabelElement.InnerTextAsync();
+                } 
+                
+                var response = _responseInterpreter.GetQuestionResponse(question, jobTitle);
+
+                if (response != null)
+                {
+                    await input.FillAsync(response);
+                }
+                else
+                {
+                    await input.FillAsync(_settingsConfig.DefaultTextboxResponse);
                 }
             }
         }
