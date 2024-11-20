@@ -100,7 +100,9 @@ namespace JSeekerBot.UI
                 //Load Settings File
                 accessingData.WaitOne();
 
-                if (File.Exists(Directory.GetCurrentDirectory() + "BotData.json"))
+                var path = Directory.GetCurrentDirectory() + "\\BotData.json";
+
+                if (File.Exists(path))
                 {
                     using StreamReader reader = new StreamReader("BotData.json");
                     string fileJson = reader.ReadToEnd();

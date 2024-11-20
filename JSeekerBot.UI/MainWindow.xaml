@@ -29,11 +29,13 @@
         <Button x:Name="runTabButtton" Grid.Column="1" Grid.Row="1" Background="#FF7D0202" FontSize="16" Click="OpenRunControl" Foreground="#FF848484" >Run</Button>
         <Button x:Name="setttingsTabButtton" Grid.Column="2" Grid.Row="1" Background="#FF2F2F2F" FontSize="16" Click="OpenSettingsControl" Foreground="#FF848484">Settings</Button>
         <Button x:Name="responseTabButtton" Grid.Column="3" Grid.Row="1" Background="#FF2F2F2F" FontSize="16" Click="OpenResponseHelperControl" Foreground="#FF848484">Response Helper</Button>
+        <Button x:Name="credentiaslTabButton" Grid.Column="4" Grid.Row="1" Background="#FF2F2F2F" FontSize="16" Click="OpenCredentialsControl" Foreground="#FF848484">Credentials</Button>
 
         <Grid x:Name="GridContainer" Grid.Row="2" Grid.Column="1" RowSpan="4" Grid.ColumnSpan="4">
             <local:RunControl x:Name="RunControl" Visibility="Visible"></local:RunControl>
             <local:SettingsControl x:Name="SettingsControl" Visibility="Collapsed"></local:SettingsControl>
             <local:ResponseHelperControl x:Name="ResponseHelperControl" Visibility="Collapsed"></local:ResponseHelperControl>
+            <local:CredentialsControl x:Name="CredentialsControl" Visibility="Collapsed"></local:CredentialsControl>
         </Grid>
     </Grid>
 </Window>

@@ -67,6 +67,21 @@ namespace JSeekerBot.UI
             SetActiveUserControlWindow(ResponseHelperControl, responseTabButtton);
         }
 
+        private void OpenCredentialsControl(object sender, RoutedEventArgs e)
+        {
+            //OpenFolderDialog folderDialog = new OpenFolderDialog();
+
+            //bool? success = folderDialog.ShowDialog();
+
+            //if (success == true)
+            //{
+            //    string path = folderDialog.FolderName;
+            //}
+
+
+            SetActiveUserControlWindow(CredentialsControl, credentiaslTabButton);
+        }
+
 
         /// <summary>
         /// Changes the active control window visibility
@@ -78,12 +93,14 @@ namespace JSeekerBot.UI
             RunControl.Visibility = Visibility.Collapsed;
             SettingsControl.Visibility = Visibility.Collapsed;
             ResponseHelperControl.Visibility = Visibility.Collapsed;
+            CredentialsControl.Visibility = Visibility.Collapsed;
 
 
             var bc = new BrushConverter();
             runTabButtton.Background = (Brush)bc.ConvertFrom("#FF2F2F2F");
             setttingsTabButtton.Background = (Brush)bc.ConvertFrom("#FF2F2F2F");
             responseTabButtton.Background = (Brush)bc.ConvertFrom("#FF2F2F2F");
+            credentiaslTabButton.Background = (Brush)bc.ConvertFrom("#FF2F2F2F");
 
 
             //Sets the passed in control parameter visibility to ON.

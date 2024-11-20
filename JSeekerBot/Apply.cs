@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using ClosedXML.Excel;
 using DocumentFormat.OpenXml.Bibliography;
 using DocumentFormat.OpenXml.Drawing.Charts;
+using DocumentFormat.OpenXml.Spreadsheet;
 using JSeekerBot.Configuration;
 using Microsoft.Playwright;
 using Tensorflow;
@@ -43,8 +44,12 @@ namespace JSeekerBot
             //Navigate to the Find Jobs page. 
             await Page.GetByRole(AriaRole.Link, new () { NameString = "Jobs" }).ClickAsync();
             await Page.WaitForURLAsync("https://www.linkedin.com/jobs/");
-            await Page.GetByRole(AriaRole.Link, new () { NameString = "Show all More jobs for you" }).ClickAsync();
 
+            await Page.GetByLabel("Search by title, skill, or company").FillAsync(_settingsConfig.JobSearchRole);
+            await Page.WaitForTimeoutAsync(1500);
+            await Page.GetByLabel("City, state, or zip code").FillAsync(_settingsConfig.JobSearchLocation);
+            await Page.WaitForTimeoutAsync(1500);
+            await Page.GetByLabel("City, state, or zip code").PressAsync("Enter");
 
             var currentPageCounter = 1;
             ILocator nextPageButton;
@@ -56,7 +61,7 @@ namespace JSeekerBot
             //Check each job in the job list. Look for easy apply button
             do
             {
-                await Page.WaitForTimeoutAsync(1500);
+                await Page.WaitForTimeoutAsync(10000);
 
                 //Verify that the last job application form has closed, before starting another
                 await CloseJobDetails();
@@ -102,6 +107,8 @@ namespace JSeekerBot
                         }
                     }
 
+                    await Page.WaitForTimeoutAsync(500);
+
                     jobsProcessed++;
                     Console.WriteLine($"Jobs Processed - {jobsProcessed}");
                 }
@@ -130,12 +137,11 @@ namespace JSeekerBot
 
             var applicationStatusEntry = await Page.GetApplicationStatusEntryDetailsAsync(false, true);
 
-            while (await Page.Locator($"[aria-label='Continue to next step']").IsVisibleAsync() && tryCounter < 15)
+            while (await Page.Locator($"[aria-label='Continue to next step']").CountAsync() > 0 && tryCounter < 15)
             {
                 //Try to fill the current application forms page. Try 15 times before giving up. TODO - This could probably be lowered was a failsafe
                 await TryFillEmptyInputs(applicationStatusEntry.JobTitle);
-
-                if (await Page.Locator($"[aria-label='Continue to next step']").IsVisibleAsync() && await Page.Locator($"[aria-label='Continue to next step']").CountAsync() > 0 && await Page.Locator($"[aria-label='Continue to next step']").IsEnabledAsync())
+                if (await Page.Locator($"[aria-label='Continue to next step']").CountAsync() > 0 && await Page.Locator($"[aria-label='Continue to next step']").CountAsync() > 0 && await Page.Locator($"[aria-label='Continue to next step']").IsEnabledAsync())
                     await Page.Locator($"[aria-label='Continue to next step']").ClickAsync();
 
                 tryCounter++;
@@ -180,10 +186,13 @@ namespace JSeekerBot
 
         private async Task PopulateFormDropdowns()
         {
+            //Get a list of all combo boxes on application form
             var comboBoxes = await Page.QuerySelectorAllAsync("select");
 
+            //Iterate through each combobox
             foreach (var box in comboBoxes)
             {
+
                 var options = await box.QuerySelectorAllAsync("option");
 
                 //Get the textboxes question
@@ -191,16 +200,17 @@ namespace JSeekerBot
 
                 var questionLabelElement = Page.Locator($"[for='{inputId}']");
 
+                //Get the question from the application
                 string question = "";
 
-                if (questionLabelElement != null)
-                {
-                    if (await questionLabelElement.IsVisibleAsync())
-                        question = await questionLabelElement.InnerTextAsync();
-                }
+                if (await questionLabelElement.IsVisibleAsync())
+                    question = await questionLabelElement.InnerTextAsync();
 
+
+                //Check if we have a correct response in dictionary
                 var response = _responseInterpreter.GetQuestionResponse(question);
 
+                //Only enter response if it isn't prefilled already TODO - Maybe modify this to happen no matter what?
                 if (await box.InputValueAsync() == "" || await box.InputValueAsync() == "Select an option")
                 {
                     if (response != null)
@@ -223,7 +233,6 @@ namespace JSeekerBot
                             await box.SelectOptionAsync(await options[1].GetAttributeAsync("value"));
                         }
 
-
                     }
                     else
                     {
@@ -236,9 +245,9 @@ namespace JSeekerBot
 
         private async Task PopulateFormRadioButtons()
         {
-            var radioButtonQuestionContainer = await Page.QuerySelectorAllAsync("fieldset");
+            var radioButtonQuestionContainers = await Page.QuerySelectorAllAsync("fieldset[data-test-form-builder-radio-button-form-component='true']");
 
-            foreach (var question in radioButtonQuestionContainer)
+            foreach (var question in radioButtonQuestionContainers)
             {
                 //Get the textboxes question
 
@@ -270,7 +279,9 @@ namespace JSeekerBot
                 {
                     if (_settingsConfig.DefaultRadioButtonResponse.ToUpper() == "YES")
                     {
-                        await options.FirstOrDefault().ClickAsync();
+                        var option = options.FirstOrDefault();
+                        if (option != null)
+                            await option.ClickAsync();
                     }
                     else if (_settingsConfig.DefaultRadioButtonResponse.ToUpper() == "NO")
                     {

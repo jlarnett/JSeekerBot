@@ -39,18 +39,23 @@ namespace JSeekerBot
             {
                 
             }
-            public SettingsConfig(string resultFolderPath, string dTextboxResponse, string dComboBoxResponse, string dRadioButtonResponse)
+
+            public SettingsConfig(string resultFolderPath, string dTextboxResponse, string dComboBoxResponse, string dRadioButtonResponse, string role, string location)
             {
                 ResultFolderPath = resultFolderPath;
                 DefaultComboBoxResponse = dComboBoxResponse;
                 DefaultTextboxResponse = dTextboxResponse;
                 DefaultRadioButtonResponse = dRadioButtonResponse;
+                JobSearchRole = role;
+                JobSearchLocation = location;
             }
 
             public string ResultFolderPath { get; set; }
             public string DefaultTextboxResponse { get; set; }
             public string DefaultComboBoxResponse { get; set; }
             public string DefaultRadioButtonResponse { get; set; }
+            public string JobSearchRole { get; set; }
+            public string JobSearchLocation { get; set; }
         }
 
         public static List<QuestionResponsePair> LoadQuestionResponseFile()
