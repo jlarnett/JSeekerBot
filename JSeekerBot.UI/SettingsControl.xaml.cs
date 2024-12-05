@@ -67,13 +67,29 @@ namespace JSeekerBot.UI
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
+            var bc = new BrushConverter();
+
             //Save Settings
             var config = new SettingsConfig(ResultPathTextbox.Text, DefaultTextboxAnswer.Text,
                 DefaultComboBoxAnswer.Text, DefaultTRadioButtonAnswer.Text, JobSearchRoleTextbox.Text, JobSearchLocationTextbox.Text);
             var json = JsonSerializer.Serialize(config);
 
+            try
+            {
+                File.WriteAllText("..\\..\\..\\..\\Settings\\JSeekerSettings.json",json);
+            }
+            catch (Exception exception)
+            {
+                ValidationsText.Foreground = (Brush)bc.ConvertFrom("##FF7D020");
+                ValidationsText.Text = $"Failed to save settings file to disk - {exception.Message}";
+                return;
+            }
 
-            File.WriteAllText("..\\..\\..\\..\\Settings\\JSeekerSettings.json",json);
+
+            ValidationsText.Foreground = (Brush)bc.ConvertFrom("#4BB543");
+            ValidationsText.Text = "Settings saved successfully!";
+
+
         }
 
         [Serializable]

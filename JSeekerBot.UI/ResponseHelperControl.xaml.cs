@@ -30,8 +30,8 @@ namespace JSeekerBot.UI
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-
             bool keyExists = false;
+            var bc = new BrushConverter();
 
             //Check for key
             foreach (var item in QuestionResponsePairsList.Items)
@@ -41,8 +41,17 @@ namespace JSeekerBot.UI
                     keyExists = true;
             }
 
-            if(!keyExists)
+            if (!keyExists)
+            {
                 QuestionResponsePairsList.Items.Add($"{QuestionKeyTextbox.Text}|{QuestionResponseTextbox.Text}");
+                ValidationsText.Foreground = (Brush)bc.ConvertFrom("#4BB543");
+                ValidationsText.Text = "response added successfully!";
+            }
+            else
+            {
+                ValidationsText.Foreground = (Brush)bc.ConvertFrom("#4BB543");
+                ValidationsText.Text = $"Failed to add response key already exists. Keys are all converted to uppercase so be mindful";
+            }
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
@@ -52,14 +61,27 @@ namespace JSeekerBot.UI
 
         private void WriteResponseFile(object sender, RoutedEventArgs e)
         {
+            var bc = new BrushConverter();
             bool resultFileExists = File.Exists("..//..//..//..//QuestionResponseFiles//qr_mapping.xlsx");
+
             XLWorkbook wb;
             IXLWorksheet workSheet;
 
+
             if (resultFileExists)
             {
-                wb = new XLWorkbook("..//..//..//..//QuestionResponseFiles//qr_mapping.xlsx");
-                workSheet = wb.Worksheet("QuestionResponsePairs");
+                try
+                {
+                    wb = new XLWorkbook("..//..//..//..//QuestionResponseFiles//qr_mapping.xlsx");
+                    workSheet = wb.Worksheet("QuestionResponsePairs");
+                }
+                catch (Exception exception)
+                {
+                    ValidationsText.Foreground = (Brush)bc.ConvertFrom("##FF7D020");
+                    ValidationsText.Text = $"Failed to load response file from disk - {exception.Message}";
+                    return;
+                }
+
             }
             else
             {
@@ -73,15 +95,29 @@ namespace JSeekerBot.UI
             for (int i = 0; i < QuestionResponsePairsList.Items.Count; i++)
             {
                 var split = QuestionResponsePairsList.Items[i].ToString().Split("|");
-                workSheet.Cell(i + 2, 1).Value = split[0];
-                workSheet.Cell(i+2, 2).Value = split[1];
+                workSheet.Cell(i + 2, 1).Value = split[0].Trim();
+                workSheet.Cell(i+2, 2).Value = split[1].TrimStart();
             }
 
-            wb.SaveAs($"..//..//..//..//QuestionResponseFiles//qr_mapping.xlsx");
+            try
+            {
+                wb.SaveAs($"..//..//..//..//QuestionResponseFiles//qr_mapping.xlsx");
+            }
+            catch (Exception exception)
+            {
+                ValidationsText.Foreground = (Brush)bc.ConvertFrom("#FF7D020");
+                ValidationsText.Text = $"Failed to save response file to disk - {exception.Message}";
+                return;
+            }
+
+            ValidationsText.Foreground = (Brush)bc.ConvertFrom("#4BB543");
+            ValidationsText.Text = "response file saved successfully!";
         }
 
         private void LoadQuestionResponseFile()
         {
+            var bc = new BrushConverter();
+
             bool resultFileExists = File.Exists("..//..//..//..//QuestionResponseFiles//qr_mapping.xlsx");
             XLWorkbook wb;
 
@@ -110,6 +146,9 @@ namespace JSeekerBot.UI
                 i++;
             }
 
+
+            ValidationsText.Foreground = (Brush)bc.ConvertFrom("#4BB543");
+            ValidationsText.Text = "response file loaded successfully!";
         }
     }
 }

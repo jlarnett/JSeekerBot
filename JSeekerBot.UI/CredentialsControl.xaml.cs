@@ -43,12 +43,24 @@ namespace JSeekerBot.UI
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             //Save .env credentials
-
+            var bc = new BrushConverter();
             var currentDirectory = Directory.GetCurrentDirectory();
 
-            using StreamWriter writer = new StreamWriter(@"..\..\..\..\JSeekerBot\.env");
-            writer.WriteLine($"LINKEDIN_USERNAME={EmailAddressTextbox.Text}");
-            writer.WriteLine($"LINKEDIN_PASSWORD={PasswordTextbox.Password}");
+            try
+            {
+                using StreamWriter writer = new StreamWriter(@"..\..\..\..\JSeekerBot\.env");
+                writer.WriteLine($"LINKEDIN_USERNAME={EmailAddressTextbox.Text}");
+                writer.WriteLine($"LINKEDIN_PASSWORD={PasswordTextbox.Password}");
+            }
+            catch (Exception exception)
+            {
+                ValidationsText.Foreground = (Brush)bc.ConvertFrom("##FF7D020");
+                ValidationsText.Text = $"Failed to save credentials file to disk - {exception.Message}";
+                return;
+            }
+
+            ValidationsText.Foreground = (Brush)bc.ConvertFrom("#4BB543");
+            ValidationsText.Text = "Credentials saved successfully!";
         }
     }
 }

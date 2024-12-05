@@ -46,9 +46,9 @@ namespace JSeekerBot
             await Page.WaitForURLAsync("https://www.linkedin.com/jobs/");
 
             await Page.GetByLabel("Search by title, skill, or company").FillAsync(_settingsConfig.JobSearchRole);
-            await Page.WaitForTimeoutAsync(1500);
+            await Page.WaitForTimeoutAsync(500);
             await Page.GetByLabel("City, state, or zip code").FillAsync(_settingsConfig.JobSearchLocation);
-            await Page.WaitForTimeoutAsync(1500);
+            await Page.WaitForTimeoutAsync(500);
             await Page.GetByLabel("City, state, or zip code").PressAsync("Enter");
 
             var currentPageCounter = 1;
@@ -58,16 +58,19 @@ namespace JSeekerBot
             int jobsProcessed = 0;
             int applicationsSubmitted = 0;
 
+            //Probably need to find a better wait for this specific purpose. Waiting for Jobs List page to load -> slow load causing issues
+            await Page.WaitForTimeoutAsync(10000);
+
+
             //Check each job in the job list. Look for easy apply button
             do
             {
-                await Page.WaitForTimeoutAsync(10000);
 
                 //Verify that the last job application form has closed, before starting another
                 await CloseJobDetails();
 
                 //List of job postings for the current page. Contains list of jobPosts
-                var jobList = await Page.QuerySelectorAllAsync(".scaffold-layout__list-container .jobs-search-results__list-item");
+                var jobList = await Page.QuerySelectorAllAsync(".scaffold-layout__list-item");
 
                 foreach (var jobPost in jobList)
                 {

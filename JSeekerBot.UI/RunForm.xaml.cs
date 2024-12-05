@@ -154,9 +154,19 @@ namespace JSeekerBot.UI
                 process.EnableRaisingEvents = true;
                 process.BeginOutputReadLine();
                 process.OutputDataReceived += new DataReceivedEventHandler(StandardOutputReceiver);
+                process.ErrorDataReceived += ProcessOnErrorDataReceived;
             }
 
             LoadBotData();
+        }
+
+        private void ProcessOnErrorDataReceived(object sender, DataReceivedEventArgs e)
+        {
+            // Receives the child process' standard output
+            if (! string.IsNullOrEmpty(e.Data))
+            {
+                Console.WriteLine(e.Data);
+            }
         }
     }
 
