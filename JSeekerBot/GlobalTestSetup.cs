@@ -11,7 +11,7 @@ public class GlobalTestSetup
         //Loads the .env environment variable file.  
         DotNetEnv.Env
             .TraversePath()
-            .Load();
+            .Load(@"..\..\..\..\Envs\.env");
 
     }
 }

@@ -29,7 +29,7 @@ namespace JSeekerBot.UI
 
         private async void LoadCredentials()
         {
-            using StreamReader reader = new StreamReader(@"..\..\..\..\JSeekerBot\.env");
+            using StreamReader reader = new StreamReader(@"..\..\..\..\Envs\.env");
             var email = await reader.ReadLineAsync();
             var pass = await reader.ReadLineAsync();
 
@@ -48,7 +48,7 @@ namespace JSeekerBot.UI
 
             try
             {
-                using StreamWriter writer = new StreamWriter(@"..\..\..\..\JSeekerBot\.env");
+                using StreamWriter writer = new StreamWriter(@"..\..\..\..\Envs\.env");
                 writer.WriteLine($"LINKEDIN_USERNAME={EmailAddressTextbox.Text}");
                 writer.WriteLine($"LINKEDIN_PASSWORD={PasswordTextbox.Password}");
             }
