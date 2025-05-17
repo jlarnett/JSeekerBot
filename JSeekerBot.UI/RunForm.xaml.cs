@@ -134,6 +134,7 @@ namespace JSeekerBot.UI
 
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
+
             var currentDirectory = Directory.GetCurrentDirectory();
             var ps1File = @$"{currentDirectory}\runtests.ps1";
             var startInfo = new ProcessStartInfo()

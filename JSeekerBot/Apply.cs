@@ -46,6 +46,10 @@ namespace JSeekerBot
             await Page.WaitForURLAsync("https://www.linkedin.com/jobs/");
 
             await Page.GetByLabel("Search by title, skill, or company").FillAsync(_settingsConfig.JobSearchRole);
+            await Page.GetByLabel("Search by title, skill, or company").PressAsync("Enter");
+
+            await Page.WaitForTimeoutAsync(500);
+            //await Page.Locator(".jobs-semantic-search-location-filter button").ClickAsync();
             await Page.WaitForTimeoutAsync(500);
             await Page.GetByLabel("City, state, or zip code").FillAsync(_settingsConfig.JobSearchLocation);
             await Page.WaitForTimeoutAsync(500);
@@ -110,7 +114,7 @@ namespace JSeekerBot
                         }
                     }
 
-                    await Page.WaitForTimeoutAsync(500);
+                    await Page.WaitForTimeoutAsync(150);
 
                     jobsProcessed++;
                     Console.WriteLine($"Jobs Processed - {jobsProcessed}");
@@ -316,12 +320,9 @@ namespace JSeekerBot
 
                 string question = "";
 
-                if (questionLabelElement != null)
-                {
-                    if (await questionLabelElement.IsVisibleAsync())
-                        question = await questionLabelElement.InnerTextAsync();
-                } 
-                
+                if (await questionLabelElement.IsVisibleAsync())
+                    question = await questionLabelElement.InnerTextAsync();
+
                 var response = _responseInterpreter.GetQuestionResponse(question, jobTitle);
 
                 if (response != null)
@@ -331,6 +332,36 @@ namespace JSeekerBot
                 else
                 {
                     await input.FillAsync(_settingsConfig.DefaultTextboxResponse);
+                }
+            }
+
+            //Handle Basic Textboxes - Weird Location (City) dropdowns
+            var basicTextInputs = await Page.QuerySelectorAllAsync(".jobs-easy-apply-modal__content .basic-input ");
+            foreach (var input in basicTextInputs)
+            {
+                //Get the textboxes question
+                var inputId = await input.GetAttributeAsync("Id");
+                var questionLabelElement = Page.Locator($"[for='{inputId}']");
+
+                string question = "";
+
+                if (await questionLabelElement.IsVisibleAsync())
+                    question = await questionLabelElement.InnerTextAsync();
+
+                var response = _responseInterpreter.GetQuestionResponse(question, jobTitle);
+
+                if (response != null)
+                {
+                    await input.FillAsync(response);
+                    await input.PressAsync("ArrowDown");
+                    await input.PressAsync("Enter");
+                    
+                }
+                else
+                {
+                    await input.FillAsync(_settingsConfig.DefaultTextboxResponse);
+                    await input.PressAsync("ArrowDown");
+                    await input.PressAsync("Enter");
                 }
             }
         }

@@ -23,14 +23,81 @@
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="20"></RowDefinition>
             <RowDefinition Height="20"></RowDefinition>
-            <RowDefinition Height="40"></RowDefinition>
+            <RowDefinition Height="100"></RowDefinition>
         </Grid.RowDefinitions>
-        <TextBlock Grid.Column="1" Grid.Row="2" FontSize="22" Foreground="#FF848484">Jobs Processed: </TextBlock>
-        <TextBlock x:Name="JobProcessCounterText" Grid.Column="3" Grid.Row="2" FontSize="22" Foreground="#FF848484">0</TextBlock>
-        <TextBlock Grid.Column="1" Grid.Row="3" FontSize="22" Foreground="#FF848484">Applications Submitted: </TextBlock>
-        <TextBlock x:Name="ApplicationSubmittedCounterText" Grid.Column="3" Grid.Row="3" FontSize="22" Foreground="#FF848484">0</TextBlock>
+          <Grid.Resources>
+      <Style x:Key="DarkButtonStyle" TargetType="Button">
+          <Setter Property="Background" Value="#333"/>
+          <Setter Property="Foreground" Value="#EEE"/>
+          <Setter Property="FontSize" Value="16"/>
+          <Setter Property="FontWeight" Value="SemiBold"/>
+          <Setter Property="Padding" Value="10,6"/>
+          <Setter Property="Margin" Value="5"/>
+          <Setter Property="BorderBrush" Value="#555"/>
+          <Setter Property="BorderThickness" Value="1"/>
+          <Setter Property="Cursor" Value="Hand"/>
+          <Setter Property="Template">
+              <Setter.Value>
+                  <ControlTemplate TargetType="Button">
+                      <Border x:Name="border"
+                              Background="{TemplateBinding Background}"
+                              BorderBrush="{TemplateBinding BorderBrush}"
+                              BorderThickness="{TemplateBinding BorderThickness}"
+                              CornerRadius="8"
+                              SnapsToDevicePixels="True">
+                          <ContentPresenter HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            RecognizesAccessKey="True"
+                                            Content="{TemplateBinding Content}"
+                                            ContentTemplate="{TemplateBinding ContentTemplate}" />
+                      </Border>
+                      <ControlTemplate.Triggers>
+                          <Trigger Property="IsMouseOver" Value="True">
+                              <Setter TargetName="border" Property="Background" Value="#444"/>
+                              <Setter TargetName="border" Property="BorderBrush" Value="#888"/>
+                          </Trigger>
+                          <Trigger Property="IsPressed" Value="True">
+                              <Setter TargetName="border" Property="Background" Value="#222"/>
+                              <Setter TargetName="border" Property="BorderBrush" Value="#AAA"/>
+                          </Trigger>
+                          <Trigger Property="IsEnabled" Value="False">
+                              <Setter TargetName="border" Property="Opacity" Value="0.5"/>
+                          </Trigger>
+                      </ControlTemplate.Triggers>
+                  </ControlTemplate>
+              </Setter.Value>
+          </Setter>
+      </Style>
+              <Style x:Key="LabelStyle" TargetType="TextBlock">
+                  <Setter Property="FontSize" Value="20"/>
+                  <Setter Property="Foreground" Value="#FFB0B0B0"/>
+                  <Setter Property="VerticalAlignment" Value="Center"/>
+                  <Setter Property="Margin" Value="0,5"/>
+              </Style>
 
-        <TextBlock Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="4" x:Name="ValidationsText" >Test Error Log</TextBlock>
-        <Button Grid.Column="1" Grid.Row="6" Grid.ColumnSpan="5" Background="DarkRed" Foreground="Black" FontSize="14" Height="20" Margin="0,0,112,0" VerticalAlignment="Center" Click="Button_Click">Execute Bot Run</Button>
+              <Style x:Key="CounterTextStyle" TargetType="TextBlock">
+                  <Setter Property="FontSize" Value="22"/>
+                  <Setter Property="Foreground" Value="#FFFAFAFA"/>
+                  <Setter Property="FontWeight" Value="Bold"/>
+                  <Setter Property="VerticalAlignment" Value="Center"/>
+              </Style>
+
+  </Grid.Resources>
+        <TextBlock Grid.Column="1" Grid.Row="2" Style="{StaticResource LabelStyle}">Jobs Processed: </TextBlock>
+        <TextBlock x:Name="JobProcessCounterText" Grid.Column="3" Grid.Row="2" Style="{StaticResource CounterTextStyle}">0</TextBlock>
+
+        <TextBlock Grid.Column="1" Grid.Row="3" Style="{StaticResource LabelStyle}">Applications Submitted: </TextBlock>
+        <TextBlock x:Name="ApplicationSubmittedCounterText" Grid.Column="3" Grid.Row="3" Style="{StaticResource CounterTextStyle}">0</TextBlock>
+
+        <TextBlock Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="4" x:Name="ValidationsText" Visibility="Hidden" Style="{StaticResource LabelStyle}">Test Error Log</TextBlock>
+
+        <Button Grid.Column="1" Grid.Row="6" Grid.ColumnSpan="5"
+                Height="40"
+                Margin="0,0,112,0"
+                VerticalAlignment="Center"
+                FontSize="22"
+                Content="Execute Bot Run"
+                Click="Button_Click"
+                Style="{StaticResource DarkButtonStyle}" />
     </Grid>
 </UserControl>

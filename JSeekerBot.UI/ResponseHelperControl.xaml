@@ -13,6 +13,7 @@
             <ColumnDefinition Width="100"></ColumnDefinition>
             <ColumnDefinition Width="100"></ColumnDefinition>
             <ColumnDefinition Width="100"></ColumnDefinition>
+            <ColumnDefinition Width="550"></ColumnDefinition>
             <ColumnDefinition Width="auto"></ColumnDefinition>
             <ColumnDefinition Width="*"></ColumnDefinition>
             <ColumnDefinition Width="20"></ColumnDefinition>
@@ -23,25 +24,243 @@
             <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition Height="20"></RowDefinition>
-            <RowDefinition Height="20"></RowDefinition>
+            <RowDefinition Height="40"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="20"></RowDefinition>
-            <RowDefinition Height="20"></RowDefinition>
-            <RowDefinition Height="20"></RowDefinition>
-            <RowDefinition Height="20"></RowDefinition>
+            <RowDefinition Height="30"></RowDefinition>
+            <RowDefinition Height="60"></RowDefinition>
+            <RowDefinition Height="60"></RowDefinition>
         </Grid.RowDefinitions>
-        <ListBox Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="6" x:Name="QuestionResponsePairsList" Background="#FF212121" Foreground="#FF7F7F7F">
-        </ListBox>
-        <TextBlock Grid.Column="1" Grid.Row="5" Foreground="#FF848484" VerticalAlignment="Center" HorizontalAlignment="Center" >Question Key</TextBlock>
-        <TextBox Grid.Column="2" Grid.Row="5" x:Name="QuestionKeyTextbox" Background="#FF212121" Foreground="#FF7F7F7F"></TextBox>
+        <Grid.Resources>
 
-        <TextBlock Grid.Column="3" Grid.ColumnSpan="2" Grid.Row="5" Foreground="#FF848484" VerticalAlignment="Center" HorizontalAlignment="Center">Question Response</TextBlock>
-        <TextBox Grid.Column="5" Grid.Row="5" x:Name="QuestionResponseTextbox" Grid.ColumnSpan="2" Background="#FF212121" Foreground="#FF7F7F7F"></TextBox>
+
+            <Style x:Key="DarkButtonStyle" TargetType="Button">
+                <Setter Property="Background" Value="#333"/>
+                <Setter Property="Foreground" Value="#EEE"/>
+                <Setter Property="FontSize" Value="16"/>
+                <Setter Property="FontWeight" Value="SemiBold"/>
+                <Setter Property="Padding" Value="10,6"/>
+                <Setter Property="Margin" Value="5"/>
+                <Setter Property="BorderBrush" Value="#555"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="border"
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    CornerRadius="8"
+                                    SnapsToDevicePixels="True">
+                                <ContentPresenter HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center"
+                                                  RecognizesAccessKey="True"
+                                                  Content="{TemplateBinding Content}"
+                                                  ContentTemplate="{TemplateBinding ContentTemplate}" />
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="border" Property="Background" Value="#444"/>
+                                    <Setter TargetName="border" Property="BorderBrush" Value="#888"/>
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter TargetName="border" Property="Background" Value="#222"/>
+                                    <Setter TargetName="border" Property="BorderBrush" Value="#AAA"/>
+                                </Trigger>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter TargetName="border" Property="Opacity" Value="0.5"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+                        <Style x:Key="RedButtonStyle" TargetType="Button" BasedOn="{StaticResource DarkButtonStyle}">
+                <Setter Property="Background" Value="#C62828"/>      <!-- Dark red -->
+                <Setter Property="Foreground" Value="#FFEBEE"/>      <!-- Light reddish text -->
+                <Setter Property="BorderBrush" Value="#8E0000"/>     <!-- Darker red border -->
+                <Setter Property="FontWeight" Value="SemiBold"/>
+                <Setter Property="FontSize" Value="16"/>
+                <Setter Property="Padding" Value="10,6"/>
+                <Setter Property="Margin" Value="5"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="border"
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    CornerRadius="8"
+                                    SnapsToDevicePixels="True">
+                                <ContentPresenter HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center"
+                                                  RecognizesAccessKey="True"
+                                                  Content="{TemplateBinding Content}"
+                                                  ContentTemplate="{TemplateBinding ContentTemplate}" />
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="border" Property="Background" Value="#E53935"/>  <!-- lighter red on hover -->
+                                    <Setter TargetName="border" Property="BorderBrush" Value="#F44336"/>
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter TargetName="border" Property="Background" Value="#8E0000"/>  <!-- dark red on press -->
+                                    <Setter TargetName="border" Property="BorderBrush" Value="#C62828"/>
+                                </Trigger>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter TargetName="border" Property="Opacity" Value="0.5"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="GreenButtonStyle" TargetType="Button" BasedOn="{StaticResource DarkButtonStyle}">
+                <Setter Property="Background" Value="#2E7D32"/>      <!-- Dark green -->
+                <Setter Property="Foreground" Value="#E0F2F1"/>      <!-- Light greenish text -->
+                <Setter Property="BorderBrush" Value="#1B5E20"/>     <!-- Darker green border -->
+                <Setter Property="FontWeight" Value="SemiBold"/>
+                <Setter Property="FontSize" Value="16"/>
+                <Setter Property="Padding" Value="10,6"/>
+                <Setter Property="Margin" Value="5"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="border"
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    CornerRadius="8"
+                                    SnapsToDevicePixels="True">
+                                <ContentPresenter HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center"
+                                                  RecognizesAccessKey="True"
+                                                  Content="{TemplateBinding Content}"
+                                                  ContentTemplate="{TemplateBinding ContentTemplate}" />
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="border" Property="Background" Value="#388E3C"/>  <!-- lighter green on hover -->
+                                    <Setter TargetName="border" Property="BorderBrush" Value="#4CAF50"/>
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter TargetName="border" Property="Background" Value="#1B5E20"/>  <!-- dark green on press -->
+                                    <Setter TargetName="border" Property="BorderBrush" Value="#2E7D32"/>
+                                </Trigger>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter TargetName="border" Property="Opacity" Value="0.5"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </Grid.Resources>
+        <DataGrid Grid.Column="1" Grid.Row="1" 
+                  Grid.ColumnSpan="5" x:Name="QuestionResponsePairsList"
+                  Background="#FF1E1E1E"
+                  Foreground="#FFCCCCCC"
+                  BorderBrush="#FF3A3A3A"
+                  RowBackground="#FF2A2A2A"
+                  AlternatingRowBackground="#FF1F1F1F"
+                  GridLinesVisibility="All"
+                  HorizontalGridLinesBrush="#FF3A3A3A"
+                  VerticalGridLinesBrush="#FF3A3A3A"
+                  ColumnHeaderHeight="30"
+                  RowHeight="28"
+                  HeadersVisibility="Column"
+                  AutoGenerateColumns="False"
+                  FontSize="14"
+                  FontWeight="Normal"
+                  >
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Question Key"
+                                    Binding="{Binding QuestionMatchKey}"
+                                    Width="*"
+                                    IsReadOnly="True" />
+                <DataGridTextColumn Header="Desired Response"
+                                    Binding="{Binding DesiredResponse}"
+                                    Width="*"
+                                    IsReadOnly="False" />
+            </DataGrid.Columns>
+            <DataGrid.Resources>
+                <!-- Change header background and foreground -->
+                <Style TargetType="DataGridColumnHeader">
+                    <Setter Property="Background" Value="#FF2F2F2F"/>
+                    <Setter Property="Foreground" Value="#FFAAAAAA"/>
+                    <Setter Property="FontWeight" Value="Bold"/>
+                    <Setter Property="BorderBrush" Value="#444"/>
+                    <Setter Property="BorderThickness" Value="0,0,1,1"/>
+                    <Setter Property="Padding" Value="6,2"/>
+                </Style>
+            </DataGrid.Resources>
+        </DataGrid>
+        <!-- Label for Question Key -->
+        <TextBlock Grid.Column="1" Grid.Row="5"
+                   Foreground="#FFAAAAAA"
+                   FontWeight="Bold"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Right"
+                   Margin="0,0,10,0"
+                   Text="Question Key" />
+
+        <!-- Input for Question Key -->
+        <TextBox Grid.Column="2" Grid.Row="5"
+                 x:Name="QuestionKeyTextbox"
+                 Background="#FF2A2A2A"
+                 Foreground="#FFE0E0E0"
+                 BorderBrush="#555"
+                 BorderThickness="1"
+                 Padding="6"
+                 FontSize="14"
+                 FontWeight="Normal"
+                 VerticalContentAlignment="Center"
+                 Margin="0,0,10,0" />
+
+        <!-- Label for Question Response -->
+        <TextBlock Grid.Column="3" Grid.Row="5"
+                   Grid.ColumnSpan="2"
+                   Foreground="#FFAAAAAA"
+                   FontWeight="Bold"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Right"
+                   Margin="0,0,10,0"
+                   Text="Question Response" />
+
+        <!-- Input for Question Response -->
+        <TextBox Grid.Column="5" Grid.Row="5"
+                 x:Name="QuestionResponseTextbox"
+                 Grid.ColumnSpan="2"
+                 Background="#FF2A2A2A"
+                 Foreground="#FFE0E0E0"
+                 BorderBrush="#555"
+                 BorderThickness="1"
+                 Padding="6"
+                 FontSize="14"
+                 FontWeight="Normal"
+                 VerticalContentAlignment="Center"
+                 Margin="0,0,10,0" />
 
 
         <TextBlock Grid.Column="1" Grid.ColumnSpan="4" Grid.Row="8" x:Name="ValidationsText" >Test Error Log</TextBlock>
-        <Button Grid.Column="1" Grid.Row="9" Grid.ColumnSpan="2" Click="Button_Click" Background="Green" Foreground="Black">Add question-Response Pair</Button>
-        <Button Grid.Column="3" Grid.Row="9" Grid.ColumnSpan="2" Height="20" VerticalAlignment="Top" Click="Button_Click_1" Background="DarkRed" Foreground="Black" FontWeight="Bold">Remove question-Response Pair</Button>
-        <Button Grid.Column="5" Grid.Row="9" Grid.ColumnSpan="2" Height="20" VerticalAlignment="Top" Click="WriteResponseFile" Background="Aqua" Foreground="Black">Write Response File</Button>
+
+        <Button Grid.Column="1" Grid.Row="9" Grid.ColumnSpan="2"
+                Click="Button_Click"
+                Content="Add Pair"
+                Style="{StaticResource GreenButtonStyle}" />
+
+        <Button Grid.Column="3" Grid.Row="9" Grid.ColumnSpan="2"
+                Click="Button_Click_1"
+                Content="Remove Pair"
+                Style="{StaticResource RedButtonStyle}" />
+
+        <Button Grid.Column="5" Grid.Row="9" Grid.ColumnSpan="2"
+                Click="WriteResponseFile"
+                Content="Write to File"
+                Style="{StaticResource DarkButtonStyle}" />
+
     </Grid>
+
 </UserControl>

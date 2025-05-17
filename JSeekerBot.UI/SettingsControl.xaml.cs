@@ -50,6 +50,9 @@ namespace JSeekerBot.UI
             JobSearchRoleTextbox.Text = config.JobSearchRole;
             JobSearchLocationTextbox.Text = config.JobSearchLocation;
 
+            var bc = new BrushConverter();
+            ValidationsText.Foreground = (Brush)bc.ConvertFrom("#4BB543");
+            ValidationsText.Text = "Settings loaded successfully!";
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -88,8 +91,6 @@ namespace JSeekerBot.UI
 
             ValidationsText.Foreground = (Brush)bc.ConvertFrom("#4BB543");
             ValidationsText.Text = "Settings saved successfully!";
-
-
         }
 
         [Serializable]

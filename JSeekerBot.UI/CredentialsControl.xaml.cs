@@ -38,6 +38,10 @@ namespace JSeekerBot.UI
 
             if(pass != null)
                 PasswordTextbox.Password = pass.Split("=")[1];
+            
+            var bc = new BrushConverter();
+            ValidationsText.Foreground = (Brush)bc.ConvertFrom("#4BB543");
+            ValidationsText.Text = "Credentials loaded successfully!";
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

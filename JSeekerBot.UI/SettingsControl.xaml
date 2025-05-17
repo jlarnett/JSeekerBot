@@ -31,6 +31,50 @@
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="20"></RowDefinition>
         </Grid.RowDefinitions>
+          <Grid.Resources>
+      <Style x:Key="DarkButtonStyle" TargetType="Button">
+          <Setter Property="Background" Value="#333"/>
+          <Setter Property="Foreground" Value="#EEE"/>
+          <Setter Property="FontSize" Value="16"/>
+          <Setter Property="FontWeight" Value="SemiBold"/>
+          <Setter Property="Padding" Value="10,6"/>
+          <Setter Property="Margin" Value="5"/>
+          <Setter Property="BorderBrush" Value="#555"/>
+          <Setter Property="BorderThickness" Value="1"/>
+          <Setter Property="Cursor" Value="Hand"/>
+          <Setter Property="Template">
+              <Setter.Value>
+                  <ControlTemplate TargetType="Button">
+                      <Border x:Name="border"
+                              Background="{TemplateBinding Background}"
+                              BorderBrush="{TemplateBinding BorderBrush}"
+                              BorderThickness="{TemplateBinding BorderThickness}"
+                              CornerRadius="8"
+                              SnapsToDevicePixels="True">
+                          <ContentPresenter HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            RecognizesAccessKey="True"
+                                            Content="{TemplateBinding Content}"
+                                            ContentTemplate="{TemplateBinding ContentTemplate}" />
+                      </Border>
+                      <ControlTemplate.Triggers>
+                          <Trigger Property="IsMouseOver" Value="True">
+                              <Setter TargetName="border" Property="Background" Value="#444"/>
+                              <Setter TargetName="border" Property="BorderBrush" Value="#888"/>
+                          </Trigger>
+                          <Trigger Property="IsPressed" Value="True">
+                              <Setter TargetName="border" Property="Background" Value="#222"/>
+                              <Setter TargetName="border" Property="BorderBrush" Value="#AAA"/>
+                          </Trigger>
+                          <Trigger Property="IsEnabled" Value="False">
+                              <Setter TargetName="border" Property="Opacity" Value="0.5"/>
+                          </Trigger>
+                      </ControlTemplate.Triggers>
+                  </ControlTemplate>
+              </Setter.Value>
+          </Setter>
+      </Style>
+  </Grid.Resources>
         <TextBlock Grid.Column="1" Grid.Row="1" FontSize="22" Foreground="#FF848484">Result Folder Path:</TextBlock>
         <TextBox Grid.Column="3" Grid.Row="1" x:Name="ResultPathTextbox" Background="#FF313131" VerticalAlignment="Center" Foreground="#FF848484">C:/Path</TextBox>
         <Button Grid.Column="4" Grid.Row="1" Grid.ColumnSpan="2" Height="29" Margin="20,0,0,0" VerticalAlignment="Top" Click="Button_Click" Foreground="#FF848484" Background="#FF313131">Select Path</Button>
@@ -52,7 +96,14 @@
         <TextBox Grid.Column="3" Grid.Row="7" x:Name="JobSearchLocationTextbox" Foreground="#FF848484" Background="#FF313131" VerticalAlignment="Center">Chicago</TextBox>
 
 
-        <TextBlock Grid.Column="1" Grid.Row="9" Grid.ColumnSpan="4" x:Name="ValidationsText" >Test Error Log</TextBlock>
-        <Button Grid.Column="1" Grid.Row="10" Grid.ColumnSpan="7" Foreground="#FF848484" Background="#FF313131" Height="20" Margin="0,0,112,0" VerticalAlignment="Top" Click="Button_Click_1">Save Settings</Button>
+        <TextBlock Grid.Column="1" Grid.Row="9" Grid.ColumnSpan="4" x:Name="ValidationsText">Test Error Log</TextBlock>
+        <Button Grid.Column="1" Grid.Row="10" Grid.ColumnSpan="7"
+                Height="40"
+                Margin="0,0,112,0"
+                VerticalAlignment="Top"
+                FontSize="22"
+                Content="Save Settings"
+                Click="Button_Click_1"
+                Style="{StaticResource DarkButtonStyle}" />
     </Grid>
 </UserControl>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -22,41 +23,52 @@ namespace JSeekerBot.UI
     /// </summary>
     public partial class ResponseHelperControl : UserControl
     {
+        public ObservableCollection<QuestionResponsePair> Pairs = [];
+        
         public ResponseHelperControl()
         {
             InitializeComponent();
+            QuestionResponsePairsList.ItemsSource = Pairs;
             LoadQuestionResponseFile();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            bool keyExists = false;
-            var bc = new BrushConverter();
-
-            //Check for key
-            foreach (var item in QuestionResponsePairsList.Items)
+            bool keyExistsInList = false;
+            
+            foreach (var pair in Pairs)
             {
-                var key = item.ToString().Split("|")[0].Replace(" ", "").ToUpper();
-                if(key == QuestionKeyTextbox.Text.ToUpper())
-                    keyExists = true;
+                if (pair.QuestionMatchKey.Equals(QuestionKeyTextbox.Text))
+                {
+                    keyExistsInList = true;
+                }
             }
 
-            if (!keyExists)
+            var bc = new BrushConverter();
+
+            if (!keyExistsInList)
             {
-                QuestionResponsePairsList.Items.Add($"{QuestionKeyTextbox.Text}|{QuestionResponseTextbox.Text}");
+                Pairs.Add(new QuestionResponsePair
+                {
+                    QuestionMatchKey = QuestionKeyTextbox.Text,
+                    DesiredResponse = QuestionResponseTextbox.Text
+                });
+                
                 ValidationsText.Foreground = (Brush)bc.ConvertFrom("#4BB543");
                 ValidationsText.Text = "response added successfully!";
             }
             else
             {
-                ValidationsText.Foreground = (Brush)bc.ConvertFrom("#4BB543");
-                ValidationsText.Text = $"Failed to add response key already exists. Keys are all converted to uppercase so be mindful";
+                ValidationsText.Foreground = (Brush)bc.ConvertFrom("#FFD32F2F");
+                ValidationsText.Text = "Key already exists in list. Please edit it instead!";
             }
-        }
 
+        }
+        
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            QuestionResponsePairsList.Items.RemoveAt(QuestionResponsePairsList.SelectedIndex);
+            if(QuestionResponsePairsList.SelectedIndex != -1)
+                Pairs.RemoveAt(QuestionResponsePairsList.SelectedIndex);
         }
 
         private void WriteResponseFile(object sender, RoutedEventArgs e)
@@ -67,7 +79,6 @@ namespace JSeekerBot.UI
             XLWorkbook wb;
             IXLWorksheet workSheet;
 
-
             if (resultFileExists)
             {
                 try
@@ -77,7 +88,7 @@ namespace JSeekerBot.UI
                 }
                 catch (Exception exception)
                 {
-                    ValidationsText.Foreground = (Brush)bc.ConvertFrom("##FF7D020");
+                    ValidationsText.Foreground = (Brush)bc.ConvertFrom("#FF7D020");
                     ValidationsText.Text = $"Failed to load response file from disk - {exception.Message}";
                     return;
                 }
@@ -92,11 +103,10 @@ namespace JSeekerBot.UI
             workSheet.Cell(1, 1).Value = "Question Key";
             workSheet.Cell(1, 2).Value = "Preferred Response";
 
-            for (int i = 0; i < QuestionResponsePairsList.Items.Count; i++)
+            for (int i = 0; i < Pairs.Count; i++)
             {
-                var split = QuestionResponsePairsList.Items[i].ToString().Split("|");
-                workSheet.Cell(i + 2, 1).Value = split[0].Trim();
-                workSheet.Cell(i+2, 2).Value = split[1].TrimStart();
+                workSheet.Cell(i + 2, 1).Value = Pairs[i].QuestionMatchKey;
+                workSheet.Cell(i+2, 2).Value = Pairs[i].DesiredResponse;
             }
 
             try
@@ -116,8 +126,6 @@ namespace JSeekerBot.UI
 
         private void LoadQuestionResponseFile()
         {
-            var bc = new BrushConverter();
-
             bool resultFileExists = File.Exists("..//..//..//..//QuestionResponseFiles//qr_mapping.xlsx");
             XLWorkbook wb;
 
@@ -141,14 +149,27 @@ namespace JSeekerBot.UI
                 questionResponse = workSheet.Cell(i + 2, 2).Value.ToString();
 
                 if (questionKey == "" && questionResponse == "") break;
-
-                QuestionResponsePairsList.Items.Add($"{questionKey} | {questionResponse}");
+                
+                Pairs.Add(new QuestionResponsePair(questionKey, questionResponse));
+                //QuestionResponsePairsList.Items.Add($"{questionKey} | {questionResponse}");
                 i++;
             }
 
-
+            var bc = new BrushConverter();
             ValidationsText.Foreground = (Brush)bc.ConvertFrom("#4BB543");
             ValidationsText.Text = "response file loaded successfully!";
+        }
+    }
+
+    public class QuestionResponsePair()
+    {
+        public string QuestionMatchKey { get; set; }
+        public string DesiredResponse { get; set; }
+        
+        public QuestionResponsePair(string key, string response) : this()
+        {
+            QuestionMatchKey = key;
+            DesiredResponse = response;
         }
     }
 }
