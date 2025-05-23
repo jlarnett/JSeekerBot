@@ -51,7 +51,7 @@ namespace JSeekerBot
              
             await Page.GetByLabel("Email or phone").FillAsync(email);
             await Page.GetByLabel("Password").FillAsync(pass);
-            await Page.GetByRole(AriaRole.Button, new () { NameString = "Sign in" }).ClickAsync();
+            await Page.GetByRole(AriaRole.Button, new () { NameString = "Sign in" }).Last.ClickAsync();
 
             if (await Page.GetByRole(AriaRole.Heading, new() { NameString = "Let’s do a quick security check" })
                     .IsVisibleAsync())

@@ -10,8 +10,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="20"></ColumnDefinition>
             <ColumnDefinition Width="auto"></ColumnDefinition>
-            <ColumnDefinition Width="20"></ColumnDefinition>
-            <ColumnDefinition Width="auto"></ColumnDefinition>
+            <ColumnDefinition Width="250"></ColumnDefinition>
             <ColumnDefinition Width="auto"></ColumnDefinition>
             <ColumnDefinition Width="*"></ColumnDefinition>
             <ColumnDefinition Width="20"></ColumnDefinition>
@@ -21,8 +20,8 @@
             <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition Height="40"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="20"></RowDefinition>
-            <RowDefinition Height="20"></RowDefinition>
+            <RowDefinition Height="60"></RowDefinition>
+            <RowDefinition Height="40"></RowDefinition>
             <RowDefinition Height="100"></RowDefinition>
         </Grid.RowDefinitions>
           <Grid.Resources>
@@ -68,6 +67,42 @@
               </Setter.Value>
           </Setter>
       </Style>
+                          <Style x:Key="GreenButtonStyle" TargetType="Button" BasedOn="{StaticResource DarkButtonStyle}">
+                <Setter Property="Background" Value="#2E7D32"/>      <!-- Dark green -->
+                <Setter Property="Foreground" Value="#E0F2F1"/>      <!-- Light greenish text -->
+                <Setter Property="BorderBrush" Value="#1B5E20"/>     <!-- Darker green border -->
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="border"
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    CornerRadius="8"
+                                    SnapsToDevicePixels="True">
+                                <ContentPresenter HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center"
+                                                  RecognizesAccessKey="True"
+                                                  Content="{TemplateBinding Content}"
+                                                  ContentTemplate="{TemplateBinding ContentTemplate}" />
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="border" Property="Background" Value="#388E3C"/>  <!-- lighter green on hover -->
+                                    <Setter TargetName="border" Property="BorderBrush" Value="#4CAF50"/>
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter TargetName="border" Property="Background" Value="#1B5E20"/>  <!-- dark green on press -->
+                                    <Setter TargetName="border" Property="BorderBrush" Value="#2E7D32"/>
+                                </Trigger>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter TargetName="border" Property="Opacity" Value="0.5"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
               <Style x:Key="LabelStyle" TargetType="TextBlock">
                   <Setter Property="FontSize" Value="20"/>
                   <Setter Property="Foreground" Value="#FFB0B0B0"/>
@@ -77,18 +112,39 @@
 
               <Style x:Key="CounterTextStyle" TargetType="TextBlock">
                   <Setter Property="FontSize" Value="22"/>
-                  <Setter Property="Foreground" Value="#FFFAFAFA"/>
+                  <Setter Property="Foreground" Value="Green"/>
                   <Setter Property="FontWeight" Value="Bold"/>
                   <Setter Property="VerticalAlignment" Value="Center"/>
               </Style>
 
   </Grid.Resources>
-        <TextBlock Grid.Column="1" Grid.Row="2" Style="{StaticResource LabelStyle}">Jobs Processed: </TextBlock>
+        <TextBlock Grid.Column="1" Grid.Row="2"  Style="{StaticResource LabelStyle}">Jobs Processed: </TextBlock>
         <TextBlock x:Name="JobProcessCounterText" Grid.Column="3" Grid.Row="2" Style="{StaticResource CounterTextStyle}">0</TextBlock>
 
-        <TextBlock Grid.Column="1" Grid.Row="3" Style="{StaticResource LabelStyle}">Applications Submitted: </TextBlock>
-        <TextBlock x:Name="ApplicationSubmittedCounterText" Grid.Column="3" Grid.Row="3" Style="{StaticResource CounterTextStyle}">0</TextBlock>
+        <TextBlock Grid.Column="1" Grid.Row="5" Style="{StaticResource LabelStyle}">Applications Submitted: </TextBlock>
+        <TextBlock x:Name="ApplicationSubmittedCounterText" Grid.Column="3" Grid.Row="5" Style="{StaticResource CounterTextStyle}">0</TextBlock>
 
+        <Canvas Width="400" Height="400" Grid.Row="2" Grid.Column="4" Margin="200 0 0 0" Visibility="Hidden" x:Name="RunExecutingLoadingIcon">
+            <Ellipse Width="150" Height="150"  Stroke="White" StrokeThickness="1"
+                     StrokeDashArray="5 100"
+                     RenderTransformOrigin="0.5,0.5">
+                <Ellipse.RenderTransform>
+                    <RotateTransform x:Name="SpinnerRotate"/>
+                </Ellipse.RenderTransform>
+                <Ellipse.Triggers>
+                    <EventTrigger RoutedEvent="Ellipse.Loaded">
+                        <BeginStoryboard>
+                            <Storyboard RepeatBehavior="Forever">
+                                <DoubleAnimation
+                                    Storyboard.TargetName="SpinnerRotate"
+                                    Storyboard.TargetProperty="Angle"
+                                    From="0" To="360" Duration="0:0:1"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </Ellipse.Triggers>
+            </Ellipse>
+        </Canvas>
         <TextBlock Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="4" x:Name="ValidationsText" Visibility="Hidden" Style="{StaticResource LabelStyle}">Test Error Log</TextBlock>
 
         <Button Grid.Column="1" Grid.Row="6" Grid.ColumnSpan="5"
@@ -98,6 +154,6 @@
                 FontSize="22"
                 Content="Execute Bot Run"
                 Click="Button_Click"
-                Style="{StaticResource DarkButtonStyle}" />
+                Style="{StaticResource GreenButtonStyle}" />
     </Grid>
 </UserControl>

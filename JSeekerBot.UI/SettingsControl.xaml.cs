@@ -1,21 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using Google.Protobuf.WellKnownTypes;
+using JSeeker.Common.Services;
 using Microsoft.Win32;
-using Newtonsoft.Json;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace JSeekerBot.UI
@@ -25,23 +15,19 @@ namespace JSeekerBot.UI
     /// </summary>
     public partial class SettingsControl : UserControl
     {
+        private readonly SettingsBuilder SettingsBuilder = new SettingsBuilder();
+        
         public SettingsControl()
         {
             InitializeComponent();
-            InitalizeSettings();
+            InitializeSettings();
         }
 
-        private void InitalizeSettings()
+        private void InitializeSettings()
         {
-            var config = new SettingsConfig();
-
-            //Load Settings File
-            using (StreamReader reader = new StreamReader("..\\..\\..\\..\\Settings\\JSeekerSettings.json"))
-            {
-                string json = reader.ReadToEnd();
-                config = JsonSerializer.Deserialize<SettingsConfig>(json);
-            }
-
+            //Load settings config from JSON file
+            var config = SettingsBuilder.LoadConfig();
+            
             //set settings Control values to the current settings file values
             ResultPathTextbox.Text = config.ResultFolderPath;
             DefaultTextboxAnswer.Text = config.DefaultTextboxResponse;
@@ -57,6 +43,7 @@ namespace JSeekerBot.UI
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            //Open folder dialog for selecting path to output results
             OpenFolderDialog folderDialog = new OpenFolderDialog();
 
             bool? success = folderDialog.ShowDialog();
@@ -73,48 +60,24 @@ namespace JSeekerBot.UI
             var bc = new BrushConverter();
 
             //Save Settings
-            var config = new SettingsConfig(ResultPathTextbox.Text, DefaultTextboxAnswer.Text,
+            var config = new SettingsBuilder.SettingsConfig(ResultPathTextbox.Text, DefaultTextboxAnswer.Text,
                 DefaultComboBoxAnswer.Text, DefaultTRadioButtonAnswer.Text, JobSearchRoleTextbox.Text, JobSearchLocationTextbox.Text);
-            var json = JsonSerializer.Serialize(config);
+            var success = SettingsBuilder.SaveConfig(config);
 
-            try
+            if (success)
             {
-                File.WriteAllText("..\\..\\..\\..\\Settings\\JSeekerSettings.json",json);
+                ValidationsText.Foreground = (Brush)bc.ConvertFrom("#4BB543");
+                ValidationsText.Text = "Settings saved successfully!";
             }
-            catch (Exception exception)
+            else
             {
                 ValidationsText.Foreground = (Brush)bc.ConvertFrom("##FF7D020");
-                ValidationsText.Text = $"Failed to save settings file to disk - {exception.Message}";
-                return;
+                ValidationsText.Text = $"Failed to save settings file to disk";
             }
-
+            
 
             ValidationsText.Foreground = (Brush)bc.ConvertFrom("#4BB543");
             ValidationsText.Text = "Settings saved successfully!";
-        }
-
-        [Serializable]
-        struct SettingsConfig
-        {
-
-            public SettingsConfig(string resultFolderPath, string dTextboxResponse,
-                string dComboBoxResponse, string dRadioButtonResponse,
-                string role, string location)
-            {
-                ResultFolderPath = resultFolderPath;
-                DefaultComboBoxResponse = dComboBoxResponse;
-                DefaultTextboxResponse = dTextboxResponse;
-                DefaultRadioButtonResponse = dRadioButtonResponse;
-                JobSearchRole = role;
-                JobSearchLocation = location;
-            }
-
-            public string ResultFolderPath { get; set; }
-            public string DefaultTextboxResponse { get; set; }
-            public string DefaultComboBoxResponse { get; set; }
-            public string DefaultRadioButtonResponse { get; set; }
-            public string JobSearchRole { get; set; }
-            public string JobSearchLocation { get; set; }
         }
     }
 }

@@ -1,14 +1,6 @@
-using System.Collections;
-using System.Reflection.PortableExecutable;
-using System.Runtime.CompilerServices;
 using ClosedXML.Excel;
-using DocumentFormat.OpenXml.Bibliography;
-using DocumentFormat.OpenXml.Drawing.Charts;
-using DocumentFormat.OpenXml.Spreadsheet;
-using JSeekerBot.Configuration;
+using JSeeker.Common.Services;
 using Microsoft.Playwright;
-using Tensorflow;
-using static System.Reflection.Metadata.BlobBuilder;
 
 namespace JSeekerBot
 {
@@ -17,7 +9,7 @@ namespace JSeekerBot
     {
         private List<JobApplicationStatusEntry> _applicationStatusEntries = new List<JobApplicationStatusEntry>();
         private ResponseInterpreter _responseInterpreter;
-        private SettingsLoader.SettingsConfig _settingsConfig;
+        private SettingsBuilder.SettingsConfig _settingsConfig;
 
         [OneTimeSetUp]
         public void Setup()
@@ -42,18 +34,18 @@ namespace JSeekerBot
 
 
             //Navigate to the Find Jobs page. 
-            await Page.GetByRole(AriaRole.Link, new () { NameString = "Jobs" }).ClickAsync();
+            await Page.GetByRole(AriaRole.Link, new () { NameString = "Jobs" }).First.ClickAsync();
             await Page.WaitForURLAsync("https://www.linkedin.com/jobs/");
 
-            await Page.GetByLabel("Search by title, skill, or company").FillAsync(_settingsConfig.JobSearchRole);
-            await Page.GetByLabel("Search by title, skill, or company").PressAsync("Enter");
+            await Page.GetByLabel("Search by title, skill, or company").First.FillAsync(_settingsConfig.JobSearchRole);
+            await Page.GetByLabel("Search by title, skill, or company").Last.PressAsync("Enter");
 
             await Page.WaitForTimeoutAsync(500);
             //await Page.Locator(".jobs-semantic-search-location-filter button").ClickAsync();
             await Page.WaitForTimeoutAsync(500);
-            await Page.GetByLabel("City, state, or zip code").FillAsync(_settingsConfig.JobSearchLocation);
+            await Page.GetByLabel("City, state, or zip code").First.FillAsync(_settingsConfig.JobSearchLocation);
             await Page.WaitForTimeoutAsync(500);
-            await Page.GetByLabel("City, state, or zip code").PressAsync("Enter");
+            await Page.GetByLabel("City, state, or zip code").First.PressAsync("Enter");
 
             var currentPageCounter = 1;
             ILocator nextPageButton;
@@ -81,7 +73,7 @@ namespace JSeekerBot
                     await jobPost.ClickAsync();
 
                     //Easy Apply Button locator. 
-                    var easyApplyButton = Page.Locator(".jobs-apply-button--top-card").First;
+                    var easyApplyButton = Page.Locator(".jobs-apply-button").First;
 
                     //variable to check if our bot reached max apply limmit
                     reachedEasyApplyLimit = await Page
@@ -373,16 +365,27 @@ namespace JSeekerBot
         /// <returns></returns>
         private async Task CloseJobDetails()
         {
+            //var allDismisses = await Page.GetByRole(AriaRole.Button, new() { NameString = "Dismiss" }).AllAsync();
 
-            if (await Page.GetByRole(AriaRole.Button, new() { NameString = "Dismiss" }).IsVisibleAsync())
-            {
-                await Page.GetByRole(AriaRole.Button, new () { NameString = "Dismiss" }).ClickAsync();
-            }
+            //foreach (var element in allDismisses)
+            //{
+            //    if (await element.IsVisibleAsync() && await element.IsEnabledAsync())
+            //        await element.ClickAsync();
+            //}
 
-            if (await Page.GetByRole(AriaRole.Button, new() { NameString = "Discard" }).IsVisibleAsync())
-            {
-                await Page.GetByRole(AriaRole.Button, new () { NameString = "Discard" }).ClickAsync();
-            }
+            //var allDiscard = await Page.GetByRole(AriaRole.Button, new() { NameString = "Discard" }).AllAsync();
+
+            //foreach (var element in allDiscard)
+            //{
+            //    if (await element.IsVisibleAsync() && await element.IsEnabledAsync())
+            //        await element.ClickAsync();
+            //}
+
+            if (await Page.Locator(".artdeco-modal").GetByRole(AriaRole.Button, new() { NameString = "Dismiss" }).IsVisibleAsync())
+                await Page.Locator(".artdeco-modal").GetByRole(AriaRole.Button, new() { NameString = "Dismiss" }).ClickAsync();
+
+            if (await Page.Locator(".artdeco-modal--layer-confirmation ").GetByRole(AriaRole.Button, new() { NameString = "Discard" }).IsVisibleAsync())
+                await Page.Locator(".artdeco-modal--layer-confirmation ").GetByRole(AriaRole.Button, new() { NameString = "Discard" }).ClickAsync();
         }
 
         [OneTimeTearDown]

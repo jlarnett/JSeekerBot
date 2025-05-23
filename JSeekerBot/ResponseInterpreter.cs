@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using JSeeker.Common.Services;
 
 namespace JSeekerBot
 {
@@ -10,7 +6,7 @@ namespace JSeekerBot
     {
         private Dictionary<string, string> questionResponseDictionary = new Dictionary<string, string>();
 
-        public void AddQuestionResponse(List<QuestionResponsePair> pairs)
+        public void AddQuestionResponse(List<ProfileManager.QuestionResponsePair> pairs)
         {
             foreach (var pair in pairs)
             {
@@ -44,11 +40,5 @@ namespace JSeekerBot
 
             return null;
         }
-    }
-
-    public struct QuestionResponsePair
-    {
-        public string QuestionKey { get; set; }
-        public string CorrectResponse { get; set; }
     }
 }

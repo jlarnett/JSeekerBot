@@ -75,9 +75,13 @@ namespace JSeekerBot.UI
 
             accessingData.ReleaseMutex();
 
-            ApplicationSubmittedCounterText.Text = botData.ApplicationSubmitted;
-            JobProcessCounterText.Text = botData.JobsProcessed;
-
+            if (ApplicationSubmittedCounterText.Text != botData.ApplicationSubmitted || JobProcessCounterText.Text != botData.JobsProcessed)
+            {
+                //The counters don't match what is stored in the botData file. Meaning run just finished or app starting
+                RunExecutingLoadingIcon.Visibility = Visibility.Hidden;
+                ApplicationSubmittedCounterText.Text = botData.ApplicationSubmitted;
+                JobProcessCounterText.Text = botData.JobsProcessed;
+            }
         }
 
         async Task RunInBackground(TimeSpan timeSpan, Action action)
@@ -134,7 +138,6 @@ namespace JSeekerBot.UI
 
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
-
             var currentDirectory = Directory.GetCurrentDirectory();
             var ps1File = @$"{currentDirectory}\runtests.ps1";
             var startInfo = new ProcessStartInfo()
@@ -152,6 +155,7 @@ namespace JSeekerBot.UI
 
             if (process != null)
             {
+                RunExecutingLoadingIcon.Visibility = Visibility.Visible;
                 process.EnableRaisingEvents = true;
                 process.BeginOutputReadLine();
                 process.OutputDataReceived += new DataReceivedEventHandler(StandardOutputReceiver);
