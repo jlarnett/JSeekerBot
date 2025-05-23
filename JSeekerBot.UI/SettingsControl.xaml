@@ -4,16 +4,17 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:JSeekerBot.UI"
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid Background="#FF212121">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="20"></ColumnDefinition>
-            <ColumnDefinition Width="auto"></ColumnDefinition>
-            <ColumnDefinition Width="20"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="100"></ColumnDefinition>
             <ColumnDefinition Width="250"></ColumnDefinition>
-            <ColumnDefinition Width="200"></ColumnDefinition>
-            <ColumnDefinition Width="auto"></ColumnDefinition>
+            <ColumnDefinition Width="250"></ColumnDefinition>
+            <ColumnDefinition Width="Auto"></ColumnDefinition>
             <ColumnDefinition Width="*"></ColumnDefinition>
             <ColumnDefinition Width="20"></ColumnDefinition>
         </Grid.ColumnDefinitions>
@@ -337,6 +338,45 @@
            HorizontalAlignment="Right"
            Margin="0,5">Result Folder Path:</TextBlock>
 
+<Button Grid.Row="1" Grid.Column="2"
+        ToolTip="The local folder the output result .xlsx excel document will get saved within. The file will be saved as Applications.xlsx"
+        Cursor="Hand"
+        HorizontalAlignment="Center"
+        VerticalAlignment="Center"
+        Background="Transparent"
+        BorderThickness="0"
+        Padding="0"
+        FocusVisualStyle="{x:Null}">
+
+    <Button.Template>
+        <ControlTemplate TargetType="Button">
+            <Border x:Name="ButtonBorder"
+                    Background="Transparent"
+                    CornerRadius="8"
+                    BorderBrush="Gray"
+                    BorderThickness="1"
+                    Padding="6">
+                <iconPacks:PackIconMaterial x:Name="Icon"
+                                            Kind="LightbulbQuestionOutline"
+                                            Width="25" Height="25"
+                                            Foreground="LawnGreen"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"/>
+            </Border>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter TargetName="ButtonBorder" Property="Background" Value="#2200FF00"/>
+                    <Setter TargetName="Icon" Property="Foreground" Value="YellowGreen"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter TargetName="ButtonBorder" Property="Background" Value="#3300AA00"/>
+                    <Setter TargetName="Icon" Property="Foreground" Value="Orange"/>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+    </Button.Template>
+</Button>
+
 <TextBox Grid.Column="3" Grid.Row="1"
          x:Name="ResultPathTextbox"
          Background="#FF2A2A2A"
@@ -371,6 +411,45 @@
            HorizontalAlignment="Right"
            Margin="0,5">Default Textbox Response:</TextBlock>
 
+<Button Grid.Row="2" Grid.Column="2"
+        ToolTip="The default textbox value when the bot encounters a normal textbox INPUT HTML element and the response interpreter can't find any associated key phrases. Recommended Value 10 (Number of years experience)"
+        Cursor="Hand"
+        HorizontalAlignment="Center"
+        VerticalAlignment="Center"
+        Background="Transparent"
+        BorderThickness="0"
+        Padding="0"
+        FocusVisualStyle="{x:Null}">
+
+    <Button.Template>
+        <ControlTemplate TargetType="Button">
+            <Border x:Name="ButtonBorder"
+                    Background="Transparent"
+                    CornerRadius="8"
+                    BorderBrush="Gray"
+                    BorderThickness="1"
+                    Padding="6">
+                <iconPacks:PackIconMaterial x:Name="Icon"
+                                            Kind="LightbulbQuestionOutline"
+                                            Width="25" Height="25"
+                                            Foreground="LawnGreen"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"/>
+            </Border>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter TargetName="ButtonBorder" Property="Background" Value="#2200FF00"/>
+                    <Setter TargetName="Icon" Property="Foreground" Value="YellowGreen"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter TargetName="ButtonBorder" Property="Background" Value="#3300AA00"/>
+                    <Setter TargetName="Icon" Property="Foreground" Value="Orange"/>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+    </Button.Template>
+</Button>
+
 <TextBox Grid.Column="3" Grid.Row="2"
          x:Name="DefaultTextboxAnswer"
          Background="#FF2A2A2A"
@@ -392,6 +471,45 @@
            HorizontalAlignment="Right"
            Margin="0,5">Default RadioButton Response:</TextBlock>
 
+<Button Grid.Row="3" Grid.Column="2"
+        ToolTip="The default chosen radio button value when the bot encounters a Yes/No RadioButton HTML element and the response interpreter can't find any associated key phrases. Recommended Value Yes"
+        Cursor="Hand"
+        HorizontalAlignment="Center"
+        VerticalAlignment="Center"
+        Background="Transparent"
+        BorderThickness="0"
+        Padding="0"
+        FocusVisualStyle="{x:Null}">
+
+    <Button.Template>
+        <ControlTemplate TargetType="Button">
+            <Border x:Name="ButtonBorder"
+                    Background="Transparent"
+                    CornerRadius="8"
+                    BorderBrush="Gray"
+                    BorderThickness="1"
+                    Padding="6">
+                <iconPacks:PackIconMaterial x:Name="Icon"
+                                            Kind="LightbulbQuestionOutline"
+                                            Width="25" Height="25"
+                                            Foreground="LawnGreen"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"/>
+            </Border>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter TargetName="ButtonBorder" Property="Background" Value="#2200FF00"/>
+                    <Setter TargetName="Icon" Property="Foreground" Value="YellowGreen"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter TargetName="ButtonBorder" Property="Background" Value="#3300AA00"/>
+                    <Setter TargetName="Icon" Property="Foreground" Value="Orange"/>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+    </Button.Template>
+</Button>
+
 <ComboBox Grid.Column="3" Grid.Row="3"
           x:Name="DefaultTRadioButtonAnswer"
           Style="{StaticResource DarkComboBoxStyle}"
@@ -408,6 +526,45 @@
            VerticalAlignment="Center"
            HorizontalAlignment="Right"
            Margin="0,5">Default ComboBox Index:</TextBlock>
+
+<Button Grid.Row="5" Grid.Column="2"
+        ToolTip="The default chosen index when the bot encounters a ComboBox HTML element and the response interpreter can't find any associated key phrases. Recommended Value 1"
+        Cursor="Hand"
+        HorizontalAlignment="Center"
+        VerticalAlignment="Center"
+        Background="Transparent"
+        BorderThickness="0"
+        Padding="0"
+        FocusVisualStyle="{x:Null}">
+
+    <Button.Template>
+        <ControlTemplate TargetType="Button">
+            <Border x:Name="ButtonBorder"
+                    Background="Transparent"
+                    CornerRadius="8"
+                    BorderBrush="Gray"
+                    BorderThickness="1"
+                    Padding="6">
+                <iconPacks:PackIconMaterial x:Name="Icon"
+                                            Kind="LightbulbQuestionOutline"
+                                            Width="25" Height="25"
+                                            Foreground="LawnGreen"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"/>
+            </Border>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter TargetName="ButtonBorder" Property="Background" Value="#2200FF00"/>
+                    <Setter TargetName="Icon" Property="Foreground" Value="YellowGreen"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter TargetName="ButtonBorder" Property="Background" Value="#3300AA00"/>
+                    <Setter TargetName="Icon" Property="Foreground" Value="Orange"/>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+    </Button.Template>
+</Button>
 
 <TextBox Grid.Column="3" Grid.Row="5"
          x:Name="DefaultComboBoxAnswer"
@@ -430,6 +587,45 @@
            HorizontalAlignment="Right"
            Margin="2,0">Job Search Role:</TextBlock>
 
+<Button Grid.Row="6" Grid.Column="2"
+        ToolTip="The job position or role the candidate is seeking"
+        Cursor="Hand"
+        HorizontalAlignment="Center"
+        VerticalAlignment="Center"
+        Background="Transparent"
+        BorderThickness="0"
+        Padding="0"
+        FocusVisualStyle="{x:Null}">
+
+    <Button.Template>
+        <ControlTemplate TargetType="Button">
+            <Border x:Name="ButtonBorder"
+                    Background="Transparent"
+                    CornerRadius="8"
+                    BorderBrush="Gray"
+                    BorderThickness="1"
+                    Padding="6">
+                <iconPacks:PackIconMaterial x:Name="Icon"
+                                            Kind="LightbulbQuestionOutline"
+                                            Width="25" Height="25"
+                                            Foreground="LawnGreen"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"/>
+            </Border>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter TargetName="ButtonBorder" Property="Background" Value="#2200FF00"/>
+                    <Setter TargetName="Icon" Property="Foreground" Value="YellowGreen"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter TargetName="ButtonBorder" Property="Background" Value="#3300AA00"/>
+                    <Setter TargetName="Icon" Property="Foreground" Value="Orange"/>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+    </Button.Template>
+</Button>
+
 <TextBox Grid.Column="3" Grid.Row="6"
          x:Name="JobSearchRoleTextbox"
          Background="#FF2A2A2A"
@@ -450,6 +646,45 @@
            HorizontalAlignment="Right"
            Margin="2,0">Location:</TextBlock>
 
+<Button Grid.Row="7" Grid.Column="2"
+        ToolTip="The City / State / Region you want the bot to apply for jobs within"
+        Cursor="Hand"
+        HorizontalAlignment="Center"
+        VerticalAlignment="Center"
+        Background="Transparent"
+        BorderThickness="0"
+        Padding="0"
+        FocusVisualStyle="{x:Null}">
+
+    <Button.Template>
+        <ControlTemplate TargetType="Button">
+            <Border x:Name="ButtonBorder"
+                    Background="Transparent"
+                    CornerRadius="8"
+                    BorderBrush="Gray"
+                    BorderThickness="1"
+                    Padding="6">
+                <iconPacks:PackIconMaterial x:Name="Icon"
+                                            Kind="LightbulbQuestionOutline"
+                                            Width="25" Height="25"
+                                            Foreground="LawnGreen"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"/>
+            </Border>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter TargetName="ButtonBorder" Property="Background" Value="#2200FF00"/>
+                    <Setter TargetName="Icon" Property="Foreground" Value="YellowGreen"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter TargetName="ButtonBorder" Property="Background" Value="#3300AA00"/>
+                    <Setter TargetName="Icon" Property="Foreground" Value="Orange"/>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+    </Button.Template>
+</Button>
+
 <TextBox Grid.Column="3" Grid.Row="7"
          x:Name="JobSearchLocationTextbox"
          Background="#FF2A2A2A"
@@ -462,15 +697,13 @@
          TextAlignment="Center"
          Margin="0,5">Chicago</TextBox>
 
-<!-- Error Log -->
-<TextBlock Grid.Column="1" Grid.Row="8" Grid.ColumnSpan="4"
-           x:Name="ValidationsText"
+<!-- Validation Text -->
+<TextBlock Grid.Column="1" Grid.Row="9" Grid.ColumnSpan="4" 
+           x:Name="ValidationsText" 
+           Foreground="#FFBBBBBB" 
            FontSize="16"
-           Foreground="OrangeRed"
-           Margin="0,10"
-           TextWrapping="Wrap"
-           FontWeight="Bold"
-           Visibility="Visible">Test Error Log</TextBlock>
+           FontStyle="Italic"
+           Margin="0,10,0,0"/>
 
         <Button Grid.Column="1" Grid.Row="10" Grid.ColumnSpan="7"
                 Height="40"

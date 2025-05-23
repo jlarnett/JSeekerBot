@@ -7,41 +7,6 @@
         mc:Ignorable="d"
         Title="Seeker" Height="600" Width="1200">
     <Window.Resources>
-        <Style x:Key="SeekerButtonStyle" TargetType="Button">
-            <Setter Property="Foreground" Value="#FFCCCCCC"/>
-            <Setter Property="Padding" Value="10,5"/>
-            <Setter Property="Margin" Value="0,0"/>
-            <Setter Property="BorderBrush" Value="#FF444444"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}"
-                                BorderBrush="{TemplateBinding BorderBrush}"
-                                CornerRadius="6"
-                                BorderThickness="{TemplateBinding BorderThickness}">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="#FF3A3A3A"/>
-                                <Setter Property="Foreground" Value="#FFFFFFFF"/>
-                            </Trigger>
-                            <Trigger Property="IsPressed" Value="True">
-                                <Setter Property="Background" Value="#FF1F1F1F"/>
-                                <Setter Property="Foreground" Value="#FF5AE3FF"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-        <Style x:Key="LargeButtonStyle" TargetType="Button">
-            <Setter Property="FontSize" Value="20"/>
-            <Setter Property="Width" Value="200"/>
-            <Setter Property="Height" Value="80"/>
-        </Style>
     </Window.Resources>
     <Grid x:Name="___No_Name_" Background="#FF565656">
         <Grid.ColumnDefinitions>
@@ -64,211 +29,215 @@
             <RowDefinition Height="20"></RowDefinition>
         </Grid.RowDefinitions>
 
-<Button x:Name="runTabButtton"
-        Grid.Column="1" Grid.Row="1"
-        Content="Run"
-        FontSize="22"
-        Click="OpenRunControl"
-        Foreground="#FFCCCCCC"
-        Background="#FF7D0202"
-        Padding="10,5"
-        Margin="0,0"
-        BorderBrush="DarkGray"
-        BorderThickness="1,1,0,0"
-        Cursor="Hand">
-    <Button.Style>
-        <Style TargetType="Button">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}"
-                                BorderBrush="{TemplateBinding BorderBrush}"
-                                CornerRadius="5,0, 0, 0"
-                                BorderThickness="{TemplateBinding BorderThickness}">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="Green"/>
-                                <Setter Property="Foreground" Value="#FFFFFFFF"/>
-                            </Trigger>
-                            <Trigger Property="IsPressed" Value="True">
-                                <Setter Property="Background" Value="Red"/>
-                                <Setter Property="Foreground" Value="#FFFF5A5A"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-    </Button.Style>
-</Button>
+        <Button x:Name="runTabButtton"
+                Grid.Column="1" Grid.Row="1"
+                Content="Run"
+                FontSize="22"
+                Click="OpenRunControl"
+                Foreground="#FFCCCCCC"
+                Background="#FF212121"
+                Padding="10,5"
+                Margin="0,0"
+                BorderBrush="DarkGray"
+                BorderThickness="1,1,0,0"
+                Cursor="Hand">
+            <Button.Style>
+                <Style TargetType="Button">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="Button">
+                                <Border Background="{TemplateBinding Background}"
+                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                        CornerRadius="5,0, 0, 0"
+                                        BorderThickness="{TemplateBinding BorderThickness}">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="Green"/>
+                                        <Setter Property="Foreground" Value="#FFFFFFFF"/>
+                                    </Trigger>
+                                    <Trigger Property="IsPressed" Value="True">
+                                        <Setter Property="Background" Value="Red"/>
+                                        <Setter Property="Foreground" Value="#FFFF5A5A"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </Button.Style>
+        </Button>
 
-<Button x:Name="setttingsTabButtton"
-        Grid.Column="2" Grid.Row="1"
-        Content="Settings"
-        FontSize="22"
-        Click="OpenSettingsControl"
-        Foreground="#FFCCCCCC"
-        Background="#FF2F2F2F"
-        Padding="10,5"
-        Margin="0,0"
-        BorderBrush="DarkGray"
-        BorderThickness="1,1,0,0"
-        Cursor="Hand">
-    <Button.Style>
-        <Style TargetType="Button">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}"
-                                BorderBrush="{TemplateBinding BorderBrush}"
-                                CornerRadius="5,0, 0, 0"
-                                BorderThickness="{TemplateBinding BorderThickness}">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="#FF3A3A3A"/>
-                                <Setter Property="Foreground" Value="#FFFFFFFF"/>
-                            </Trigger>
-                            <Trigger Property="IsPressed" Value="True">
-                                <Setter Property="Background" Value="#FF1F1F1F"/>
-                                <Setter Property="Foreground" Value="#FF5AE3FF"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-    </Button.Style>
-</Button>
+        <Button x:Name="setttingsTabButtton"
+                Grid.Column="2" Grid.Row="1"
+                Content="Settings"
+                FontSize="22"
+                Click="OpenSettingsControl"
+                Foreground="#FFCCCCCC"
+                Background="#FF2F2F2F"
+                Padding="10,5"
+                Margin="0,0"
+                BorderBrush="DarkGray"
+                BorderThickness="1,1,0,0"
+                Cursor="Hand">
+            <Button.Style>
+                <Style TargetType="Button">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="Button">
+                                <Border Background="{TemplateBinding Background}"
+                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                        CornerRadius="5,0, 0, 0"
+                                        BorderThickness="{TemplateBinding BorderThickness}">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="#FF3A3A3A"/>
+                                        <Setter Property="Foreground" Value="#FFFFFFFF"/>
+                                    </Trigger>
+                                    <Trigger Property="IsPressed" Value="True">
+                                        <Setter Property="Background" Value="#FF1F1F1F"/>
+                                        <Setter Property="Foreground" Value="#FF5AE3FF"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </Button.Style>
+        </Button>
 
-<Button x:Name="responseTabButtton"
-        Grid.Column="3" Grid.Row="1"
-        Content="Response Helper"
-        FontSize="22"
-        Click="OpenResponseHelperControl"
-        Foreground="#FFCCCCCC"
-        Background="#FF2F2F2F"
-        Padding="10,5"
-        Margin="0,0"
-        BorderBrush="DarkGray"
-        BorderThickness="1,1,0,0"
-        Cursor="Hand">
-    <Button.Style>
-        <Style TargetType="Button">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}"
-                                BorderBrush="{TemplateBinding BorderBrush}"
-                                CornerRadius="5,0, 0, 0"
-                                BorderThickness="{TemplateBinding BorderThickness}">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="#FF3A3A3A"/>
-                                <Setter Property="Foreground" Value="#FFFFFFFF"/>
-                            </Trigger>
-                            <Trigger Property="IsPressed" Value="True">
-                                <Setter Property="Background" Value="#FF1F1F1F"/>
-                                <Setter Property="Foreground" Value="#FF5AE3FF"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-    </Button.Style>
-</Button>
+        <Button x:Name="responseTabButtton"
+                Grid.Column="3" Grid.Row="1"
+                Content="Response Helper"
+                FontSize="22"
+                Click="OpenResponseHelperControl"
+                Foreground="#FFCCCCCC"
+                Background="#FF2F2F2F"
+                Padding="10,5"
+                Margin="0,0"
+                BorderBrush="DarkGray"
+                BorderThickness="1,1,0,0"
+                Cursor="Hand">
+            <Button.Style>
+                <Style TargetType="Button">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="Button">
+                                <Border Background="{TemplateBinding Background}"
+                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                        CornerRadius="5,0, 0, 0"
+                                        BorderThickness="{TemplateBinding BorderThickness}">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="#FF3A3A3A"/>
+                                        <Setter Property="Foreground" Value="#FFFFFFFF"/>
+                                    </Trigger>
+                                    <Trigger Property="IsPressed" Value="True">
+                                        <Setter Property="Background" Value="#FF1F1F1F"/>
+                                        <Setter Property="Foreground" Value="#FF5AE3FF"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </Button.Style>
+        </Button>
 
-<Button x:Name="credentiaslTabButton"
-        Grid.Column="4" Grid.Row="1"
-        Content="Credentials"
-        FontSize="22"
-        Click="OpenCredentialsControl"
-        Foreground="#FFCCCCCC"
-        Background="#FF2F2F2F"
-        Padding="0,5"
-        Margin="0,0"
-        BorderBrush="DarkGray"
-        BorderThickness="1,1,0,0"
-        Cursor="Hand">
-    <Button.Style>
-        <Style TargetType="Button">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}"
-                                BorderBrush="{TemplateBinding BorderBrush}"
-                                CornerRadius="5,0, 0, 0"
-                                BorderThickness="{TemplateBinding BorderThickness}">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="#FF3A3A3A"/>
-                                <Setter Property="Foreground" Value="#FFFFFFFF"/>
-                            </Trigger>
-                            <Trigger Property="IsPressed" Value="True">
-                                <Setter Property="Background" Value="#FF1F1F1F"/>
-                                <Setter Property="Foreground" Value="#FF5AE3FF"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-    </Button.Style>
-</Button>
+        <Button x:Name="credentiaslTabButton"
+                Grid.Column="4" Grid.Row="1"
+                Content="Credentials"
+                FontSize="22"
+                Click="OpenCredentialsControl"
+                Foreground="#FFCCCCCC"
+                Background="#FF2F2F2F"
+                Padding="0,5"
+                Margin="0,0"
+                BorderBrush="DarkGray"
+                BorderThickness="1,1,0,0"
+                Cursor="Hand">
+            <Button.Style>
+                <Style TargetType="Button">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="Button">
+                                <Border Background="{TemplateBinding Background}"
+                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                        CornerRadius="5,0, 0, 0"
+                                        BorderThickness="{TemplateBinding BorderThickness}">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="#FF3A3A3A"/>
+                                        <Setter Property="Foreground" Value="#FFFFFFFF"/>
+                                    </Trigger>
+                                    <Trigger Property="IsPressed" Value="True">
+                                        <Setter Property="Background" Value="#FF1F1F1F"/>
+                                        <Setter Property="Foreground" Value="#FF5AE3FF"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </Button.Style>
+        </Button>
 
-<Button x:Name="treeTabButton"
-        Grid.Column="5" Grid.Row="1"
-        Content="Tree"
-        FontSize="22"
-        Click="OpenTreeControl"
-        Foreground="#FFCCCCCC"
-        Background="#FF2F2F2F"
-        Padding="0,0"
-        Margin="0,0"
-        BorderBrush="DarkGray"
-        BorderThickness="1,1,0,0"
-        Cursor="Hand">
-    <Button.Style>
-        <Style TargetType="Button">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}"
-                                BorderBrush="{TemplateBinding BorderBrush}"
-                                CornerRadius="5,0, 0, 0"
-                                BorderThickness="{TemplateBinding BorderThickness}">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="#FF3A3A3A"/>
-                                <Setter Property="Foreground" Value="#FFFFFFFF"/>
-                            </Trigger>
-                            <Trigger Property="IsPressed" Value="True">
-                                <Setter Property="Background" Value="#FF1F1F1F"/>
-                                <Setter Property="Foreground" Value="#FF5AE3FF"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-    </Button.Style>
-</Button>
-        <Grid x:Name="GridContainer" Grid.Row="2" Grid.Column="1" RowSpan="4" Grid.ColumnSpan="5">
-            <local:RunControl x:Name="RunControl" Visibility="Visible"></local:RunControl>
-            <local:SettingsControl x:Name="SettingsControl" Visibility="Collapsed"></local:SettingsControl>
-            <local:ResponseHelperControl x:Name="ResponseHelperControl" Visibility="Collapsed"></local:ResponseHelperControl>
-            <local:CredentialsControl x:Name="CredentialsControl" Visibility="Collapsed"></local:CredentialsControl>
-            <local:TreeControl x:Name="TreeControl" Visibility="Collapsed"></local:TreeControl>
-        </Grid>
+        <Button x:Name="treeTabButton"
+                Grid.Column="5" Grid.Row="1"
+                Content="Tree"
+                FontSize="22"
+                Click="OpenTreeControl"
+                Foreground="#FFCCCCCC"
+                Background="#FF2F2F2F"
+                Padding="0,0"
+                Margin="0,0"
+                BorderBrush="DarkGray"
+                BorderThickness="1,1,1,0"
+                Cursor="Hand">
+            <Button.Style>
+                <Style TargetType="Button">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="Button">
+                                <Border Background="{TemplateBinding Background}"
+                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                        CornerRadius="5,5, 0, 0"
+                                        BorderThickness="{TemplateBinding BorderThickness}">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="#FF3A3A3A"/>
+                                        <Setter Property="Foreground" Value="#FFFFFFFF"/>
+                                    </Trigger>
+                                    <Trigger Property="IsPressed" Value="True">
+                                        <Setter Property="Background" Value="#FF1F1F1F"/>
+                                        <Setter Property="Foreground" Value="#FF5AE3FF"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </Button.Style>
+        </Button>
+
+        <Border Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="5" CornerRadius="0, 0,0,0" BorderBrush="DarkGray" BorderThickness="1,0,1,1">
+            <Grid x:Name="GridContainer" RowSpan="2">
+                <!-- Simulated border using Border control in background -->
+                <local:RunControl x:Name="RunControl" Visibility="Visible"></local:RunControl>
+                <local:SettingsControl x:Name="SettingsControl" Visibility="Collapsed"></local:SettingsControl>
+                <local:ResponseHelperControl x:Name="ResponseHelperControl" Visibility="Collapsed"></local:ResponseHelperControl>
+                <local:CredentialsControl x:Name="CredentialsControl" Visibility="Collapsed"></local:CredentialsControl>
+                <local:TreeControl x:Name="TreeControl" Visibility="Collapsed"></local:TreeControl>
+            </Grid>
+        </Border>
     </Grid>
 </Window>

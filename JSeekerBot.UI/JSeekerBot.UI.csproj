@@ -15,6 +15,9 @@
 
   <ItemGroup>
     <PackageReference Include="ClosedXML" Version="0.105.0" />
+    <PackageReference Include="MahApps.Metro.IconPacks" Version="5.1.0" />
+    <PackageReference Include="MahApps.Metro.IconPacks.Material" Version="5.1.0" />
+    <PackageReference Include="MahApps.Metro.IconPacks.Modern" Version="5.1.0" />
   </ItemGroup>
 
   <ItemGroup>
